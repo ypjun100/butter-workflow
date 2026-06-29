@@ -3,14 +3,14 @@
   "name": "butter-workflow",
   "description": "Marketplace entry for the Butter Workflow cross-tool plugin.",
   "owner": {
-    "name": "Yunjun Yeong"
+    "name": "Junyeong Yun"
   },
   "plugins": [
     {
       "name": "butter-workflow",
       "description": "Issue-based spec-driven agentic development workflow for Claude Code and Codex handoffs.",
       "author": {
-        "name": "Yunjun Yeong"
+        "name": "Junyeong Yun"
       },
       "category": "development",
       "source": "./",
