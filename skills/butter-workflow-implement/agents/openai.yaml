@@ -1,0 +1,4 @@
+interface:
+  display_name: "Butter Workflow Implement"
+  short_description: "Implement approved workflow tasks."
+  default_prompt: "Use $butter-workflow-implement to continue the approved task plan."

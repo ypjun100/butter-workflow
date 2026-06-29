@@ -1,0 +1,4 @@
+interface:
+  display_name: "Butter Workflow Finish"
+  short_description: "Capture reusable workflow preferences."
+  default_prompt: "Use $butter-workflow-finish to capture preferences from this workflow."

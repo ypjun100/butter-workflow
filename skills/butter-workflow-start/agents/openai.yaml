@@ -1,0 +1,4 @@
+interface:
+  display_name: "Butter Workflow Start"
+  short_description: "Start issue-based workflow planning."
+  default_prompt: "Use $butter-workflow-start with this issue link and context."

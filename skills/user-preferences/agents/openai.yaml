@@ -1,0 +1,4 @@
+interface:
+  display_name: "User Preferences"
+  short_description: "Shared workflow preference memory."
+  default_prompt: "Use $user-preferences to read active preferences for this workflow."

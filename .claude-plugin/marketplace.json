@@ -1,0 +1,20 @@
+{
+  "$schema": "https://anthropic.com/claude-code/marketplace.schema.json",
+  "name": "butter-workflow",
+  "description": "Marketplace entry for the Butter Workflow cross-tool plugin.",
+  "owner": {
+    "name": "Yunjun Yeong"
+  },
+  "plugins": [
+    {
+      "name": "butter-workflow",
+      "description": "Issue-based spec-driven agentic development workflow for Claude Code and Codex handoffs.",
+      "author": {
+        "name": "Yunjun Yeong"
+      },
+      "category": "development",
+      "source": "./",
+      "homepage": "https://app.notion.com/p/3853fe98cced80e98246feb63aa66cff"
+    }
+  ]
+}

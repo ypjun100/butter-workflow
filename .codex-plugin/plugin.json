@@ -1,0 +1,31 @@
+{
+  "name": "butter-workflow",
+  "version": "0.1.0",
+  "description": "Issue-based spec-driven agentic development workflow for Claude Code and Codex handoffs.",
+  "author": {
+    "name": "Yunjun Yeong"
+  },
+  "keywords": [
+    "workflow",
+    "spec-driven-development",
+    "issues",
+    "code-review",
+    "handoff"
+  ],
+  "skills": "./skills/",
+  "interface": {
+    "displayName": "Butter Workflow",
+    "shortDescription": "Issue-based SDD workflow for Claude Code and Codex",
+    "longDescription": "Butter Workflow guides agents through issue intake, scoped planning, implementation, review handoff, and preference capture using repository state files that work across Claude Code and Codex.",
+    "developerName": "Yunjun Yeong",
+    "category": "Productivity",
+    "capabilities": [
+      "Read",
+      "Write",
+      "Interactive"
+    ],
+    "defaultPrompt": "Use $butter-workflow-start with this issue link and context.",
+    "brandColor": "#F59E0B",
+    "screenshots": []
+  }
+}
