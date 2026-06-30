@@ -1,15 +1,15 @@
 ---
 name: butter-workflow-start
-description: Start an issue-based Spec-Driven Development workflow. Use when the user provides a Jira or GitHub issue, task link, or implementation context and wants Codex to classify Track A/B/C, create a working branch, bootstrap user-preferences, and either implement a small Track A task or create docs/specs planning files for Track B/C.
+description: Start a Spec-Driven Development workflow from the context the user provides. Use when the user hands over task context directly — pasted requirements or notes, a Jira or GitHub issue link, an issue key, or a GitHub issue number — and wants Codex to classify Track A/B/C, create a working branch, bootstrap user-preferences, and either implement a small Track A task or create docs/specs planning files for Track B/C.
 ---
 
 # Butter Workflow Start
 
-Start an issue-based workflow and leave enough repository state for another tool or session to continue.
+Start a workflow from the context the user provides and leave enough repository state for another tool or session to continue.
 
 ## Inputs
 
-- Issue URL, issue key, GitHub issue number, or pasted issue context.
+- User-provided task context. This can be pasted requirements or notes, a Jira or GitHub issue link, an issue key, or a GitHub issue number. Direct context is enough on its own; an issue link is not required.
 - Optional user constraints or implementation notes.
 
 ## Workflow
@@ -24,10 +24,10 @@ Start an issue-based workflow and leave enough repository state for another tool
    - Create missing `active.md`, `candidates.md`, and `rejected.md` from the template files under `skills/user-preferences/references/`.
    - Preserve existing preference data.
 3. Read `~/.agents/preferences/active.md` when it exists. Do not read `candidates.md` during start.
-4. Collect issue context:
-   - Prefer available Jira/GitHub MCP tools for issue title, body, comments, labels, and linked resources.
-   - If MCP is unavailable, try the user-provided URL when accessible.
-   - If neither works, ask for the issue body and relevant comments.
+4. Collect task context from the user input:
+   - When the input is or contains an issue link, issue key, or GitHub issue number, resolve it: prefer available Jira/GitHub MCP tools for title, body, comments, labels, and linked resources; fall back to the user-provided URL when accessible; ask for the issue body only if neither works.
+   - When the input is direct context (pasted requirements or notes), use it as the task context as-is. Do not ask for an issue link and do not create an issue.
+   - When the input mixes a link and direct notes, treat them as one combined context.
 5. Collect project context:
    - Current branch and clean/dirty working tree.
    - Existing branch naming convention with `git branch --list`.
@@ -71,7 +71,7 @@ Start an issue-based workflow and leave enough repository state for another tool
 ```markdown
 # Meta
 
-- Issue URL:
+- Issue URL: (optional; leave empty when there is no issue)
 - Track Type: B
 - Base branch:
 - Working branch:

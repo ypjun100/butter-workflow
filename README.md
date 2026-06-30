@@ -92,7 +92,7 @@ Use $butter-workflow-finish
 
 | Skill | Role |
 |---|---|
-| `butter-workflow-start` | Starts an issue workflow, classifies track type, creates the working branch, and creates planning docs when needed. |
+| `butter-workflow-start` | Starts a workflow from user-provided context (pasted notes or an issue link), classifies track type, creates the working branch, and creates planning docs when needed. |
 | `butter-workflow-implement` | Implements approved Track B/C task docs, verifies changes, commits, pushes, and creates a PR. |
 | `butter-workflow-code-review` | Reviews a PR or branch diff with issue, plan, task, and risk-target context. |
 | `butter-workflow-finish` | Captures reusable user preferences after a workflow. |
