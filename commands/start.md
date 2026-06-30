@@ -1,6 +1,6 @@
 ---
-description: Start a Butter Workflow from an issue link or issue context.
-argument-hint: "<issue URL or issue context>"
+description: Start a Butter Workflow from the context you provide.
+argument-hint: "<task context>"
 ---
 
 Load and follow the `butter-workflow-start` skill.
