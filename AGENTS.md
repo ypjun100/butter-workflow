@@ -17,6 +17,7 @@ and user-authored skills for Claude Code and Codex.
 - Put reusable workflow behavior in shared skills under `skills/`.
 - Use `README.md` for user-facing installation and usage.
 - Use `docs/workflow-proposal.md` for workflow design and methodology.
+- Write commit messages, PR titles, and PR bodies in English.
 - Do not store credentials, tokens, machine-local secrets, or private
   environment state in this repository.
 
