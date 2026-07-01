@@ -1,6 +1,6 @@
 # Task 2: Update implement skill to read Track A docs
 
-File: `skills/butter-workflow-implement/SKILL.md`
+File: `skills/implement/SKILL.md`
 
 ## Changes
 

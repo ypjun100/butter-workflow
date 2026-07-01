@@ -1,6 +1,6 @@
 {
   "name": "butter-workflow",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Issue-based spec-driven agentic development workflow for Claude Code and Codex handoffs.",
   "author": {
     "name": "Junyeong Yun"

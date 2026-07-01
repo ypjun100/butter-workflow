@@ -1,6 +1,6 @@
 # Task 3: Update code-review skill Track A context
 
-File: `skills/butter-workflow-code-review/SKILL.md`
+File: `skills/code-review/SKILL.md`
 
 ## Changes
 

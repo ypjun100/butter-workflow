@@ -1,5 +1,5 @@
 ---
-name: butter-workflow-start
+name: start
 user-invocable: false
 description: Start a Spec-Driven Development workflow from the context the user provides. Use when the user wants Codex to classify Track A/B/C, create a working branch, bootstrap user-preferences, and write docs/specs spec files for every track before pausing for user approval.
 ---

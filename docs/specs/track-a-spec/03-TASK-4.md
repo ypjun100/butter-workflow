@@ -17,7 +17,7 @@ Files: `docs/workflow-proposal.md`, `README.md`
 ## Changes — README.md
 
 1. "What It Provides": adjust the bullet that implies docs are Track B/C only.
-2. Skills table row for `butter-workflow-start`: reflect spec-for-every-track.
+2. Skills table row for `start`: reflect spec-for-every-track.
 3. "Track Model" list: change "Track A: ... no planning docs" to the lightweight
    spec behavior.
 4. "Repository Outputs": note Track A produces `00-META.md` + `01-SPEC.md`;

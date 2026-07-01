@@ -10,9 +10,9 @@ edited once.
 
 Affected surfaces:
 
-- `skills/butter-workflow-start/SKILL.md` — defines what start does per track.
-- `skills/butter-workflow-implement/SKILL.md` — defines which docs implement reads.
-- `skills/butter-workflow-code-review/SKILL.md` — defines per-track review context.
+- `skills/start/SKILL.md` — defines what start does per track.
+- `skills/implement/SKILL.md` — defines which docs implement reads.
+- `skills/code-review/SKILL.md` — defines per-track review context.
 - `docs/workflow-proposal.md` — methodology source of truth.
 - `README.md` — user-facing track model and outputs.
 
@@ -89,8 +89,8 @@ consistency review:
 
 ## Task Split
 
-- `03-TASK-1`: Update `butter-workflow-start` skill (Track A → lightweight spec +
+- `03-TASK-1`: Update `start` skill (Track A → lightweight spec +
   stop for approval; all-track pause; frontmatter).
-- `03-TASK-2`: Update `butter-workflow-implement` skill (read Track A docs).
-- `03-TASK-3`: Update `butter-workflow-code-review` skill (Track A context + spec).
+- `03-TASK-2`: Update `implement` skill (read Track A docs).
+- `03-TASK-3`: Update `code-review` skill (Track A context + spec).
 - `03-TASK-4`: Update `docs/workflow-proposal.md` and `README.md`.
