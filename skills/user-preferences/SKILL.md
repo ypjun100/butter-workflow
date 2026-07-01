@@ -1,5 +1,6 @@
 ---
 name: user-preferences
+user-invocable: false
 description: Shared user preference memory for Butter Workflow. Use when a Butter Workflow stage tells Codex to read active preferences or finish a workflow by updating active, candidate, and rejected preference files stored under ~/.agents/preferences.
 ---
 

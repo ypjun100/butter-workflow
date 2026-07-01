@@ -1,5 +1,6 @@
 ---
 name: butter-workflow-implement
+user-invocable: false
 description: Implement an approved Butter Workflow plan. Use after Track B/C planning docs exist and the user approves implementation, or when resuming implementation from docs/specs/{TASK-ID}; reads workflow state, applies tasks, runs verification, commits task-sized changes, pushes, and creates or updates a PR.
 ---
 

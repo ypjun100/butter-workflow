@@ -1,5 +1,6 @@
 ---
 name: butter-workflow-code-review
+user-invocable: false
 description: Review a Butter Workflow PR or working-tree diff. Use after implementation to collect track-specific context, review PR diff and GitHub review comments, apply safe fixes, and escalate design or scope-changing feedback to the user.
 ---
 
