@@ -31,9 +31,17 @@ planning depth.
 
 ### Track A: Small Low-Risk Change
 
-Track A is for small, well-scoped changes that do not need planning documents.
-The workflow can move from start directly through implementation, verification,
+Track A is for small, well-scoped changes. It writes a lightweight spec, pauses
+for user approval, and then implements from that spec through verification,
 commit, push, and PR creation.
+
+Track A creates:
+
+```text
+docs/specs/{TASK-ID}/
+  00-META.md
+  01-SPEC.md
+```
 
 Use Track A when:
 
@@ -87,16 +95,16 @@ The start stage receives an issue URL, issue key, PR context, or task summary.
 It gathers context, identifies the base branch, creates the working branch, and
 classifies the work as Track A, B, or C.
 
-For Track A, start may continue through implementation and PR creation when the
-change is small enough.
-
-For Track B or C, start creates the spec directory and writes the initial state,
-spec, plan, task files, and preference capture notes.
+Start writes the spec for the chosen track and then stops for user approval
+before implementation. For Track A it writes a lightweight spec (`00-META.md`
+and `01-SPEC.md`). For Track B or C it also writes the plan, task files, and
+preference capture notes.
 
 ### 2. Implement
 
-The implement stage resumes from `00-META.md`, `02-PLAN.md`, and the
-`03-TASK-*.md` files. It implements one task at a time, verifies the result,
+The implement stage resumes from the spec: `00-META.md` and `01-SPEC.md` for
+every track, plus `02-PLAN.md` and the `03-TASK-*.md` files for Track B/C. It
+implements one task at a time, verifies the result,
 commits completed work, pushes the branch, and creates or updates the PR.
 
 The implementation stage should keep commits aligned with task boundaries when
@@ -186,7 +194,15 @@ ending.
 
 ## Repository Outputs
 
-Track B and Track C workflows create:
+Every track creates a spec directory. Track A writes a lightweight spec:
+
+```text
+docs/specs/{TASK-ID}/
+  00-META.md
+  01-SPEC.md
+```
+
+Track B and Track C add the plan, task, and preference files:
 
 ```text
 docs/specs/{TASK-ID}/

@@ -16,7 +16,7 @@ Review the implemented diff with context from the issue and workflow docs.
    - Prefer a PR URL supplied by the user or recorded in `00-META.md`.
    - Otherwise review the current branch diff against the base branch from `00-META.md`.
 4. Collect context by track:
-   - Track A: PR diff or branch diff, related issue, existing PR review comments.
+   - Track A: PR diff or branch diff, related issue, existing PR review comments, and `01-SPEC.md` as the requirement reference.
    - Track B: Track A context plus `02-PLAN.md` and relevant `03-TASK-*.md`.
    - Track C: Track B context plus `Risk Review Targets`.
 5. Use MCP for PR and review comment access when available. If unavailable, use `gh` only for PR lookup, PR diff, and review comments when installed/authenticated.

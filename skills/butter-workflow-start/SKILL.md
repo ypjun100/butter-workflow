@@ -1,7 +1,7 @@
 ---
 name: butter-workflow-start
 user-invocable: false
-description: Start a Spec-Driven Development workflow from the context the user provides. Use when the user wants Codex to classify Track A/B/C, create a working branch, bootstrap user-preferences, and either implement a small Track A task or create docs/specs planning files for Track B/C.
+description: Start a Spec-Driven Development workflow from the context the user provides. Use when the user wants Codex to classify Track A/B/C, create a working branch, bootstrap user-preferences, and write docs/specs spec files for every track before pausing for user approval.
 ---
 
 # Butter Workflow Start
@@ -40,15 +40,16 @@ Start a workflow from the context the user provides and leave enough repository 
    - Track C: Track B plus auth, security, payment, permission, shared-core, architecture, migration, or broad refactor risk.
 9. Confirm the track with the user when the classification is ambiguous or when Track C is selected. For obvious Track A/B, proceed and state the assumption.
 10. Create the working branch once with `git switch -c <branch>`.
-11. Execute by track:
-    - Track A: implement the change, run targeted verification, commit, push, and create a PR when possible. Then recommend `butter-workflow-code-review`.
+11. Write the spec by track. Do not implement, commit, push, or open a PR during start for any track.
+    - Track A: create `docs/specs/{TASK-ID}/` and write only `00-META.md` and `01-SPEC.md` (lightweight spec).
     - Track B/C: create `docs/specs/{TASK-ID}/` and write `00-META.md`, `01-SPEC.md`, `02-PLAN.md`, one or more `03-TASK-*.md`, and `04-PREFERENCES.md`.
 12. For Track C, add `## Risk Review Targets` to `02-PLAN.md` and self-check whether each high-risk scope has review focus.
-13. Stop Track B/C in feedback mode after planning. Give the user the docs path and wait for approval before implementation.
+13. Stop in feedback mode after writing the spec for every track (A/B/C). Give the user the docs path and wait for approval before implementation.
 
 ## Document Rules
 
-- `00-META.md` is the Track B/C state source of truth.
+- `00-META.md` is the workflow state source of truth for every track.
+- Track A writes only `00-META.md` and `01-SPEC.md`. `02-PLAN.md`, `03-TASK-*.md`, and `04-PREFERENCES.md` are Track B/C only.
 - `01-SPEC.md` describes what users need and success criteria. Do not include function names, file names, or implementation choices.
 - `02-PLAN.md` describes architecture boundaries, module responsibilities, call flow, data/API shape, test strategy, constraints, and task split.
 - `03-TASK-*.md` files must be implementable units and should align with commit-sized changes.
@@ -61,22 +62,22 @@ Start a workflow from the context the user provides and leave enough repository 
 - Use `gh` only for GitHub PR creation, PR lookup, and review comment lookup when no MCP tool is available and `gh` is installed/authenticated.
 - Do not modify issue bodies or comments unless the user approves.
 
-## Track B/C File Templates
+## File Templates
 
-`00-META.md`:
+`00-META.md` (all tracks; set `Track Type` to A, B, or C):
 
 ```markdown
 # Meta
 
 - Issue URL: (optional; leave empty when there is no issue)
-- Track Type: B
+- Track Type: A
 - Base branch:
 - Working branch:
 - PR URL:
 - Status: planned
 ```
 
-`04-PREFERENCES.md`:
+`04-PREFERENCES.md` (Track B/C only):
 
 ```markdown
 # Preferences
