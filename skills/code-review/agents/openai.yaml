@@ -1,4 +1,4 @@
 interface:
   display_name: "Butter Workflow Review"
   short_description: "Review workflow PRs and diffs."
-  default_prompt: "Use $butter-workflow-code-review to review this PR or current branch."
+  default_prompt: "Use $butter-workflow:code-review to review this PR or current branch."

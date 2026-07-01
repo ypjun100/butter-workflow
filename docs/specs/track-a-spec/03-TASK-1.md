@@ -1,6 +1,6 @@
 # Task 1: Update start skill for Track A spec
 
-File: `skills/butter-workflow-start/SKILL.md`
+File: `skills/start/SKILL.md`
 
 ## Changes
 

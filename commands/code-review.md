@@ -3,7 +3,7 @@ description: Review the current Butter Workflow PR or diff using track-specific 
 argument-hint: "[optional PR URL or context]"
 ---
 
-Load and follow the `butter-workflow-code-review` skill.
+Load and follow this plugin's `code-review` skill.
 
 User input:
 

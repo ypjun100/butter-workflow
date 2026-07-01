@@ -1,5 +1,5 @@
 ---
-name: butter-workflow-implement
+name: implement
 user-invocable: false
 description: Implement an approved Butter Workflow spec. Use after docs/specs/{TASK-ID} exists and the user approves implementation; reads workflow state, applies the approved track scope, runs verification, commits task-sized changes, pushes, and creates or updates a PR.
 ---
@@ -39,7 +39,7 @@ Implement the approved spec while preserving the docs as the handoff surface.
     - Set `Status: implemented`.
     - Fill `PR URL` when known.
     - Commit the metadata update if it is part of the implementation branch.
-11. Recommend `butter-workflow-code-review`.
+11. Recommend `$butter-workflow:code-review`.
 
 ## Constraints
 

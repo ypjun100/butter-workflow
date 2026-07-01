@@ -3,7 +3,7 @@ description: Implement the approved Butter Workflow plan for the current reposit
 argument-hint: "[optional task id or context]"
 ---
 
-Load and follow the `butter-workflow-implement` skill.
+Load and follow this plugin's `implement` skill.
 
 User input:
 

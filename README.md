@@ -82,20 +82,23 @@ Use the command wrappers:
 Use the skills directly:
 
 ```text
-Use $butter-workflow-start with <task context>
-Use $butter-workflow-implement
-Use $butter-workflow-code-review with <PR URL>
-Use $butter-workflow-finish
+Use $butter-workflow:start with <task context>
+Use $butter-workflow:implement
+Use $butter-workflow:code-review with <PR URL>
+Use $butter-workflow:finish
 ```
+
+Codex namespaces plugin skills as `$plugin-name:skill-name`, so the Butter
+Workflow skills use short stage names.
 
 ### Skills
 
 | Skill | Role |
 |---|---|
-| `butter-workflow-start` | Starts a workflow from the context the user provides, classifies track type, creates the working branch, and writes spec docs for every track before pausing for approval. |
-| `butter-workflow-implement` | Implements the approved spec for any track, verifies changes, commits, pushes, and creates a PR. |
-| `butter-workflow-code-review` | Reviews a PR or branch diff with issue, plan, task, and risk-target context. |
-| `butter-workflow-finish` | Captures reusable user preferences after a workflow. |
+| `start` | Starts a workflow from the context the user provides, classifies track type, creates the working branch, and writes spec docs for every track before pausing for approval. |
+| `implement` | Implements the approved spec for any track, verifies changes, commits, pushes, and creates a PR. |
+| `code-review` | Reviews a PR or branch diff with issue, plan, task, and risk-target context. |
+| `finish` | Captures reusable user preferences after a workflow. |
 | `user-preferences` | Provides the shared preference data model and bootstrap template. |
 
 ## Track Model
