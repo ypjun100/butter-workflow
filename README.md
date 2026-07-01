@@ -35,7 +35,7 @@ handoff model.
 - Claude Code commands as thin wrappers over the same shared skill logic.
 - Codex skills loaded from the same `skills/` directory.
 - Track A/B/C routing for small changes, planned changes, and high-risk changes.
-- Track B/C handoff documents under `docs/specs/{TASK-ID}/`.
+- Handoff spec documents under `docs/specs/{TASK-ID}/` for every track.
 - Shared user preference memory under `~/.agents/preferences/`.
 
 ## Installation
@@ -92,16 +92,16 @@ Use $butter-workflow-finish
 
 | Skill | Role |
 |---|---|
-| `butter-workflow-start` | Starts an issue workflow, classifies track type, creates the working branch, and creates planning docs when needed. |
-| `butter-workflow-implement` | Implements approved Track B/C task docs, verifies changes, commits, pushes, and creates a PR. |
+| `butter-workflow-start` | Starts an issue workflow, classifies track type, creates the working branch, and writes spec docs for every track before pausing for approval. |
+| `butter-workflow-implement` | Implements the approved spec for any track, verifies changes, commits, pushes, and creates a PR. |
 | `butter-workflow-code-review` | Reviews a PR or branch diff with issue, plan, task, and risk-target context. |
 | `butter-workflow-finish` | Captures reusable user preferences after a workflow. |
 | `user-preferences` | Provides the shared preference data model and bootstrap template. |
 
 ## Track Model
 
-- Track A: small low-risk changes; no planning docs.
-- Track B: planned feature or fix within existing architecture; creates `docs/specs/{TASK-ID}/`.
+- Track A: small low-risk changes; writes a lightweight spec (`00-META.md` + `01-SPEC.md`) and pauses for approval before implementing.
+- Track B: planned feature or fix within existing architecture; creates the full `docs/specs/{TASK-ID}/` set.
 - Track C: high-risk Track B work involving auth, security, payment, permissions, shared core, architecture, migration, or broad refactor risk; adds `Risk Review Targets`.
 
 ## Tool Rules
@@ -113,7 +113,15 @@ Use $butter-workflow-finish
 
 ## Repository Outputs
 
-Track B/C workflows create:
+Every track creates a spec directory. Track A writes a lightweight spec:
+
+```text
+docs/specs/{TASK-ID}/
+  00-META.md
+  01-SPEC.md
+```
+
+Track B/C add the plan, task, and preference files:
 
 ```text
 docs/specs/{TASK-ID}/

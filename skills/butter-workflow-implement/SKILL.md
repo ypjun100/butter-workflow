@@ -15,13 +15,13 @@ Implement the approved plan while preserving the docs as the handoff surface.
    - Prefer the task id or path supplied by the user.
    - Otherwise inspect `docs/specs/*/00-META.md` and choose the one whose status is `planned` or whose working branch matches the current branch.
    - Ask the user only when multiple plausible active specs exist.
-4. Read:
-   - `00-META.md`
-   - `02-PLAN.md`
-   - Relevant `03-TASK-*.md`
-   - `02-PLAN.md` `Risk Review Targets` when Track Type is C
+4. Read the spec for the task's track:
+   - Always: `00-META.md` and `01-SPEC.md`.
+   - Track B/C also: `02-PLAN.md` and relevant `03-TASK-*.md`.
+   - Track C also: `02-PLAN.md` `Risk Review Targets`.
+   - Track A implements from `00-META.md` and `01-SPEC.md` only.
 5. Verify that the current branch matches `Working branch`. If not, switch to it or ask before continuing when switching would be risky.
-6. Implement only the current task scope. Do not expand beyond the plan without updating the plan or asking the user when scope/risk changes.
+6. Implement only the current task scope. Do not expand beyond the spec without updating it or asking the user when scope/risk changes.
 7. Run targeted verification after each meaningful task:
    - Use repo-native commands from package scripts, build files, test config, or existing documentation.
    - Prefer focused tests first, then broader checks if shared behavior changed.
@@ -45,4 +45,4 @@ Implement the approved plan while preserving the docs as the handoff surface.
 - Do not perform code review as a separate critique during implementation. Defer full diff review to the code-review stage.
 - Do not read or apply preference candidates. Only `active.md` is execution context.
 - Keep verification output out of files unless the repository already has a convention for test artifacts.
-- If the implementation materially differs from `02-PLAN.md`, update the plan before or with the code change.
+- If the implementation materially differs from the spec (`01-SPEC.md`, or `02-PLAN.md` for Track B/C), update it before or with the code change.
