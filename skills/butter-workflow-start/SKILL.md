@@ -1,16 +1,16 @@
 ---
 name: butter-workflow-start
-description: Start an issue-based Spec-Driven Development workflow. Use when the user provides a Jira or GitHub issue, task link, or implementation context and wants Codex to classify Track A/B/C, create a working branch, bootstrap user-preferences, and write docs/specs spec files for every track before pausing for user approval.
+user-invocable: false
+description: Start a Spec-Driven Development workflow from the context the user provides. Use when the user wants Codex to classify Track A/B/C, create a working branch, bootstrap user-preferences, and write docs/specs spec files for every track before pausing for user approval.
 ---
 
 # Butter Workflow Start
 
-Start an issue-based workflow and leave enough repository state for another tool or session to continue.
+Start a workflow from the context the user provides and leave enough repository state for another tool or session to continue.
 
 ## Inputs
 
-- Issue URL, issue key, GitHub issue number, or pasted issue context.
-- Optional user constraints or implementation notes.
+- The context the user provides about the task, in whatever form they give it.
 
 ## Workflow
 
@@ -24,10 +24,7 @@ Start an issue-based workflow and leave enough repository state for another tool
    - Create missing `active.md`, `candidates.md`, and `rejected.md` from the template files under `skills/user-preferences/references/`.
    - Preserve existing preference data.
 3. Read `~/.agents/preferences/active.md` when it exists. Do not read `candidates.md` during start.
-4. Collect issue context:
-   - Prefer available Jira/GitHub MCP tools for issue title, body, comments, labels, and linked resources.
-   - If MCP is unavailable, try the user-provided URL when accessible.
-   - If neither works, ask for the issue body and relevant comments.
+4. Understand the task from the provided context. Use it as-is and do not ask for any particular input form. When the context references retrievable external resources, enrich your understanding with available Jira/GitHub MCP tools, or with `gh` for GitHub when MCP is unavailable.
 5. Collect project context:
    - Current branch and clean/dirty working tree.
    - Existing branch naming convention with `git branch --list`.
@@ -72,7 +69,7 @@ Start an issue-based workflow and leave enough repository state for another tool
 ```markdown
 # Meta
 
-- Issue URL:
+- Issue URL: (optional; leave empty when there is no issue)
 - Track Type: A
 - Base branch:
 - Working branch:

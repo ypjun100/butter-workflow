@@ -71,7 +71,7 @@ Restart the tool or start a new session after installing so newly loaded command
 Use the command wrappers:
 
 ```text
-/butter-workflow:start <issue URL or context>
+/butter-workflow:start <task context>
 /butter-workflow:implement
 /butter-workflow:code-review <PR URL>
 /butter-workflow:finish
@@ -82,7 +82,7 @@ Use the command wrappers:
 Use the skills directly:
 
 ```text
-Use $butter-workflow-start with <issue URL or context>
+Use $butter-workflow-start with <task context>
 Use $butter-workflow-implement
 Use $butter-workflow-code-review with <PR URL>
 Use $butter-workflow-finish
@@ -92,7 +92,7 @@ Use $butter-workflow-finish
 
 | Skill | Role |
 |---|---|
-| `butter-workflow-start` | Starts an issue workflow, classifies track type, creates the working branch, and writes spec docs for every track before pausing for approval. |
+| `butter-workflow-start` | Starts a workflow from the context the user provides, classifies track type, creates the working branch, and writes spec docs for every track before pausing for approval. |
 | `butter-workflow-implement` | Implements the approved spec for any track, verifies changes, commits, pushes, and creates a PR. |
 | `butter-workflow-code-review` | Reviews a PR or branch diff with issue, plan, task, and risk-target context. |
 | `butter-workflow-finish` | Captures reusable user preferences after a workflow. |
