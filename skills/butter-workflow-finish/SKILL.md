@@ -1,5 +1,6 @@
 ---
 name: butter-workflow-finish
+user-invocable: false
 description: Finish a Butter Workflow by capturing reusable user preferences. Use after implementation or review to inspect Track B/C 04-PREFERENCES.md, current conversation, accepted review feedback, and preference files, then update shared user-preferences data without storing workflow state there.
 ---
 
