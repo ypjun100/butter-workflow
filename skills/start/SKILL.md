@@ -46,7 +46,7 @@ Start a workflow from the context the user provides and leave enough repository 
 12. For Track C, add `## Risk Review Targets` to `02-PLAN.md` and self-check whether each high-risk scope has review focus.
 13. Stop in feedback mode after writing the spec for every track (A/B/C):
     - Give the user the spec directory path.
-    - Summarize what was written: list every spec file created in this run, each rendered as a clickable hyperlink to the file, with a short note of what each covers. List only files actually written for the track (Track A: `00-META.md`, `01-SPEC.md`; Track B/C: the full set including every `03-TASK-*.md` written). Never list a file that was not written.
+    - Summarize what was written: list every spec file created in this run, each rendered as a clickable Markdown link to the file (for example, `[00-META.md](/absolute/path/to/docs/specs/{TASK-ID}/00-META.md)`), with a short note of what each covers. List only files actually written for the track (Track A: `00-META.md`, `01-SPEC.md`; Track B/C: the full set including every `03-TASK-*.md` written). Never list a file that was not written.
     - Wait for approval before implementation.
 
 ## Document Rules
