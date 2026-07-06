@@ -1,2 +1,5 @@
 IMPLEMENTATION-PLAN.md
 .DS_Store
+
+# Local-only SDD spec working state; never tracked or pushed to remote
+docs/specs/
