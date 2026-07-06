@@ -95,7 +95,7 @@ Workflow skills use short stage names.
 
 | Skill | Role |
 |---|---|
-| `start` | Starts a workflow from the context the user provides, classifies track type, creates the working branch, and writes spec docs for every track before pausing for approval. |
+| `start` | Starts a workflow from the context the user provides, classifies track type, creates the working branch, writes spec docs for every track, and summarizes the written files as hyperlinks before pausing for approval. |
 | `implement` | Implements the approved spec for any track, verifies changes, commits, pushes, and creates a PR. |
 | `code-review` | Reviews a PR or branch diff with issue, plan, task, and risk-target context. |
 | `finish` | Captures reusable user preferences after a workflow. |
