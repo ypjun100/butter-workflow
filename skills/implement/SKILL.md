@@ -21,7 +21,9 @@ Implement the approved spec while preserving the docs as the handoff surface.
    - Track B/C also: `02-PLAN.md` and relevant `03-TASK-*.md`.
    - Track C also: `02-PLAN.md` `Risk Review Targets`.
    - Track A implements from `00-META.md` and `01-SPEC.md` only.
-5. Verify that the current branch matches `Working branch`. If not, switch to it or ask before continuing when switching would be risky.
+5. Prepare the working branch from `00-META.md` before implementing:
+   - If the `Working branch` does not exist, create it from the `Base branch` with `git switch -c <working-branch> <base-branch>`.
+   - If it already exists, switch to it. Ask first when the working tree is dirty or switching would be risky.
 6. Implement only the current task scope. Do not expand beyond the spec without updating it or asking the user when scope/risk changes.
 7. Run targeted verification after each meaningful task:
    - Use repo-native commands from package scripts, build files, test config, or existing documentation.

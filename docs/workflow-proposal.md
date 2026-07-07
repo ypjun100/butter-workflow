@@ -105,8 +105,9 @@ preference capture notes.
 
 The implement stage resumes from the spec: `00-META.md` and `01-SPEC.md` for
 every track, plus `02-PLAN.md` and the `03-TASK-*.md` files for Track B/C. It
-implements one task at a time, verifies the result,
-commits completed work, pushes the branch, and creates or updates the PR.
+creates and checks out the working branch from the base branch, then implements
+one task at a time, verifies the result, commits completed work, pushes the
+branch, and creates or updates the PR.
 
 The implementation stage should keep commits aligned with task boundaries when
 practical.
