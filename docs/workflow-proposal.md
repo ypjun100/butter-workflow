@@ -141,7 +141,7 @@ The main handoff artifact is:
 docs/specs/{TASK-ID}/00-META.md
 ```
 
-It records the issue, track, branch, PR, current status, and next expected
+It records the track, branch, PR, current status, and next expected
 stage. The rest of the spec directory records the plan and task details.
 
 Because the state is in files, a user can switch tools or sessions without
