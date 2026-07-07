@@ -92,8 +92,9 @@ Use Track C when the work touches:
 ### 1. Start
 
 The start stage receives an issue URL, issue key, PR context, or task summary.
-It gathers context, identifies the base branch, creates the working branch, and
-classifies the work as Track A, B, or C.
+It gathers context, identifies the base branch, records the intended working
+branch name, and classifies the work as Track A, B, or C. It does not create or
+check out the branch; the implement stage does that.
 
 Start writes the spec for the chosen track and then stops for user approval
 before implementation. For Track A it writes a lightweight spec (`00-META.md`
