@@ -72,7 +72,6 @@ Start a workflow from the context the user provides and leave enough repository 
 ```markdown
 # Meta
 
-- Issue URL: (optional; leave empty when there is no issue)
 - Track Type: A
 - Base branch:
 - Working branch:
