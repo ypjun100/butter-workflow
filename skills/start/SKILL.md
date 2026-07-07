@@ -1,7 +1,7 @@
 ---
 name: start
 user-invocable: false
-description: Start a Spec-Driven Development workflow from the context the user provides. Use when the user wants Codex to classify Track A/B/C, create a working branch, bootstrap user-preferences, and write docs/specs spec files for every track before pausing for user approval.
+description: Start a Spec-Driven Development workflow from the context the user provides. Use when the user wants Codex to classify Track A/B/C, plan the working branch, bootstrap user-preferences, and write docs/specs spec files for every track before pausing for user approval.
 ---
 
 # Butter Workflow Start
@@ -30,16 +30,17 @@ Start a workflow from the context the user provides and leave enough repository 
    - Existing branch naming convention with `git branch --list`.
    - Build/test/package files relevant to the repository.
 6. Set base branch to the branch active at workflow start.
-7. Decide working branch:
+7. Plan the working branch name (do not create it):
    - Classify work type as `feature`, `fix`, `refactor`, or `docs`.
    - Derive task id from the issue key, GitHub issue number as `gh-N`, or a short slug when no id exists.
    - Follow existing branch prefix conventions when clear; otherwise use `feature/<task-id>-<slug>`, `fix/<task-id>-<slug>`, `refactor/<task-id>-<slug>`, or `docs/<task-id>-<slug>`.
+   - Record the base branch and this working branch name in `00-META.md`. The implement stage creates and checks out the branch.
 8. Classify Track Type:
    - Track A: small, low-risk, few files, no API/DB/auth/security/shared-module impact, rollback is easy.
    - Track B: needs planning docs, may touch multiple files, fits existing architecture, requires tests or type checks.
    - Track C: Track B plus auth, security, payment, permission, shared-core, architecture, migration, or broad refactor risk.
 9. Confirm the track with the user when the classification is ambiguous or when Track C is selected. For obvious Track A/B, proceed and state the assumption.
-10. Create the working branch once with `git switch -c <branch>`.
+10. Do not create or check out any branch during start. The working branch is only recorded as the planned value in `00-META.md`; the implement stage creates and checks it out.
 11. Write the spec by track. Do not implement, commit, push, or open a PR during start for any track.
     - Track A: create `docs/specs/{TASK-ID}/` and write only `00-META.md` and `01-SPEC.md` (lightweight spec).
     - Track B/C: create `docs/specs/{TASK-ID}/` and write `00-META.md`, `01-SPEC.md`, `02-PLAN.md`, one or more `03-TASK-*.md`, and `04-PREFERENCES.md`.
@@ -61,7 +62,7 @@ Start a workflow from the context the user provides and leave enough repository 
 
 ## Git And External Tools
 
-- Use `git` for branch creation, status, diff, commit, and push.
+- Use `git` only for read-only checks (status, diff, branch list) during start. Do not create branches, commit, or push.
 - Use `gh` only for GitHub PR creation, PR lookup, and review comment lookup when no MCP tool is available and `gh` is installed/authenticated.
 - Do not modify issue bodies or comments unless the user approves.
 
