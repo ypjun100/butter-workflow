@@ -92,7 +92,6 @@ On Codex, skills are invoked with a `$` prefix (`$butter-workflow-start`,
 | `butter-workflow-implement` | Creates or switches to the working branch, implements the approved spec for any track, verifies changes, commits, pushes, and creates a PR. |
 | `butter-workflow-code-review` | Reviews a PR or branch diff with issue, plan, task, and risk-target context. |
 | `butter-workflow-finish` | Captures reusable user preferences after a workflow. |
-| `butter-workflow-user-preferences` | Provides the shared preference data model and bootstrap template. |
 
 ## Track Model
 
