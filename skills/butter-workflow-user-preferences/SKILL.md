@@ -35,7 +35,7 @@ If the shared data directory is missing, create it from this skill's templates:
 
 Install this skill body into both tool skill locations when missing:
 
-- `~/.claude/skills/user-preferences/SKILL.md`
-- `~/.agents/skills/user-preferences/SKILL.md`
+- `~/.claude/skills/butter-workflow-user-preferences/SKILL.md`
+- `~/.agents/skills/butter-workflow-user-preferences/SKILL.md`
 
 Preserve existing preference data during bootstrap or template upgrades.

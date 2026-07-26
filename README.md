@@ -42,13 +42,14 @@ Install directly from this GitHub repository with the
 [skills.sh](https://www.skills.sh/) CLI. No clone required:
 
 ```bash
-npx skills add ypjun100/butter-workflow
+npx skills add ypjun100/butter-workflow -g
 ```
 
-Update to the latest version later with:
+The `-g` flag makes the workflow available across projects. Update the global
+installation to the latest version later with:
 
 ```bash
-npx skills update
+npx skills update -g
 ```
 
 This works the same way for Claude Code, Codex, and any other agent that

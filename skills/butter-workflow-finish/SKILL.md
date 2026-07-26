@@ -1,8 +1,8 @@
 ---
 name: butter-workflow-finish
 description: |-
-  Trigger: the user wants to wrap up, close out, or capture preferences from a workflow (e.g. "finish this up", "wrap up and save preferences") after implementation and any review feedback have been addressed. Inspects Track B/C 04-PREFERENCES.md, the conversation, accepted review feedback, and preference files, then updates shared user-preferences data without storing workflow state there.
-  Skip: before a PR exists, or before review feedback has been addressed — use `butter-workflow-implement` or `butter-workflow-code-review` first.
+  Trigger: the user wants to wrap up, close out, or capture preferences from a workflow (e.g. "finish this up", "wrap up and save preferences") after 00-META.md has Status: reviewed, confirming implementation and review feedback are complete. Inspects Track B/C 04-PREFERENCES.md, the conversation, accepted review feedback, and preference files, then updates shared user-preferences data without storing workflow state there.
+  Skip: 00-META.md is not yet Status: reviewed — use `butter-workflow-implement` or `butter-workflow-code-review` first.
 ---
 
 # Butter Workflow Finish
