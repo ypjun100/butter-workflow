@@ -5,7 +5,7 @@
 <h1 align="center">Butter Workflow</h1>
 
 <p align="center">
-  Portable issue-based Spec-Driven Development as a shared skill for any AI coding agent.
+  Portable issue-based Spec-Driven Development for AI coding agents that support Agent Skills.
 </p>
 
 <p align="center">
@@ -30,8 +30,8 @@ handoff model.
 ## What It Provides
 
 - Four shared workflow stages: start, implement, code-review, and finish.
-- One shared skill set (`skills/`) that works with any agent supporting the
-  Agent Skills format (`SKILL.md`) — no tool-specific command wrappers.
+- One shared skill set (`skills/`) for agents supporting the Agent Skills
+  format (`SKILL.md`) — no tool-specific command wrappers.
 - Track A/B/C routing for small changes, planned changes, and high-risk changes.
 - Handoff spec documents under `docs/specs/{TASK-ID}/` for every track.
 - Shared user preference memory under `~/.agents/preferences/`.
@@ -52,12 +52,12 @@ installation to the latest version later with:
 npx skills update -g
 ```
 
-This works the same way for Claude Code, Codex, and any other agent that
-supports the shared Agent Skills format. Trade-off to know: unlike a plugin
-marketplace, `npx skills` has no version pinning or changelog — it installs
-whatever is on the default branch, so check this repository's commit history
-before updating if that matters to you. Restart the tool or start a new
-session after installing so the newly loaded skills are available.
+The CLI supports Claude Code, Codex, and the other agents in its supported-agent
+list. Agent-specific skill features may vary. Trade-off to know: unlike a
+plugin marketplace, this installation path has no version pinning or changelog
+UI — it installs whatever is on the default branch, so check this repository's
+commit history before updating if that matters to you. Restart the tool or
+start a new session after installing so the newly loaded skills are available.
 
 ## Usage
 
