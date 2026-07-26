@@ -1,7 +1,8 @@
 # Repository Instructions
 
-This repository stores portable Butter Workflow plugin configuration, commands,
-and user-authored skills for Claude Code and Codex.
+This repository stores portable Butter Workflow configuration and
+user-authored skills for any AI agent that supports the Agent Skills format
+(`SKILL.md`), including Claude Code and Codex.
 
 ## Instruction Source Of Truth
 
@@ -13,8 +14,10 @@ and user-authored skills for Claude Code and Codex.
 
 ## Project Scope
 
-- Keep Claude Code commands and Codex entrypoints thin.
-- Put reusable workflow behavior in shared skills under `skills/`.
+- Put all reusable workflow behavior in shared skills under `skills/`; skill
+  frontmatter (`name` + `description`) is the only per-agent entrypoint. If a
+  tool-specific wrapper is ever needed again, keep it as a thin pass-through
+  with zero logic.
 - Use `README.md` for user-facing installation and usage.
 - Use `docs/workflow-proposal.md` for workflow design and methodology.
 - Write commit messages, PR titles, and PR bodies in English.
@@ -30,7 +33,7 @@ For each skill row:
 
 - Use the skill directory name in backticks.
 - Keep the role description brief and practical.
-- Describe what the skill helps Codex do, not implementation details.
+- Describe what the skill helps the agent do, not implementation details.
 - Do not add bundled/system skills from `skills/.system/`.
 
 Before committing skill changes, verify that the `README.md` table matches the
