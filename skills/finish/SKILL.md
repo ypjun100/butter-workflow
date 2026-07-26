@@ -1,7 +1,8 @@
 ---
 name: finish
-user-invocable: false
-description: Finish a Butter Workflow by capturing reusable user preferences. Use after implementation or review to inspect Track B/C 04-PREFERENCES.md, current conversation, accepted review feedback, and preference files, then update shared user-preferences data without storing workflow state there.
+description: |-
+  Trigger: the user wants to wrap up, close out, or capture preferences from a workflow (e.g. "finish this up", "wrap up and save preferences") after implementation and any review feedback have been addressed. Inspects Track B/C 04-PREFERENCES.md, the conversation, accepted review feedback, and preference files, then updates shared user-preferences data without storing workflow state there.
+  Skip: before a PR exists, or before review feedback has been addressed — use `implement` or `code-review` first.
 ---
 
 # Butter Workflow Finish

@@ -1,7 +1,8 @@
 ---
 name: implement
-user-invocable: false
-description: Implement an approved Butter Workflow spec. Use after docs/specs/{TASK-ID} exists and the user approves implementation; reads workflow state, applies the approved track scope, runs verification, commits task-sized changes, pushes, and creates or updates a PR.
+description: |-
+  Trigger: the user wants to build or continue implementing already-approved work (e.g. "implement this", "build the approved plan", "continue the implementation") once docs/specs/{TASK-ID}/00-META.md exists with an approved Status. Reads workflow state, applies the approved track scope, runs verification, commits task-sized changes, pushes, and creates or updates a PR.
+  Skip: no docs/specs/{TASK-ID}/00-META.md exists yet or the written spec has not been approved — use `start` first. Also skip once a PR already exists and is awaiting review — use `code-review` instead.
 ---
 
 # Butter Workflow Implement

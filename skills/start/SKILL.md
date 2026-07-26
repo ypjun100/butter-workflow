@@ -1,7 +1,8 @@
 ---
 name: start
-user-invocable: false
-description: Start a Spec-Driven Development workflow from the context the user provides. Use when the user wants Codex to classify Track A/B/C, plan the working branch, bootstrap user-preferences, and write docs/specs spec files for every track before pausing for user approval.
+description: |-
+  Trigger: the user wants to begin, kick off, or scope a new piece of work (e.g. "start this task", "let's plan this out", references a new issue/ticket) with no existing spec for it yet. Classifies Track A/B/C, plans the working branch, bootstraps user-preferences, and writes docs/specs/{TASK-ID} spec files for every track before pausing for approval.
+  Skip: an approved docs/specs/{TASK-ID}/00-META.md already exists for the current task (Status is planned or later) — use `implement` instead to continue that work.
 ---
 
 # Butter Workflow Start
