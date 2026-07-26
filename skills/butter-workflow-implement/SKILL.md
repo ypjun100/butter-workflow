@@ -1,8 +1,8 @@
 ---
-name: implement
+name: butter-workflow-implement
 description: |-
   Trigger: the user wants to build or continue implementing already-approved work (e.g. "implement this", "build the approved plan", "continue the implementation") once docs/specs/{TASK-ID}/00-META.md exists with an approved Status. Reads workflow state, applies the approved track scope, runs verification, commits task-sized changes, pushes, and creates or updates a PR.
-  Skip: no docs/specs/{TASK-ID}/00-META.md exists yet or the written spec has not been approved — use `start` first. Also skip once a PR already exists and is awaiting review — use `code-review` instead.
+  Skip: no docs/specs/{TASK-ID}/00-META.md exists yet or the written spec has not been approved — use `butter-workflow-start` first. Also skip once a PR already exists and is awaiting review — use `butter-workflow-code-review` instead.
 ---
 
 # Butter Workflow Implement
@@ -42,7 +42,7 @@ Implement the approved spec while preserving the docs as the handoff surface.
     - Set `Status: implemented`.
     - Fill `PR URL` when known.
     - Commit the metadata update if it is part of the implementation branch.
-11. Recommend `$butter-workflow:code-review`.
+11. Recommend the `butter-workflow-code-review` skill.
 
 ## Constraints
 

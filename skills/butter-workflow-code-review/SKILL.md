@@ -1,8 +1,8 @@
 ---
-name: code-review
+name: butter-workflow-code-review
 description: |-
   Trigger: the user wants a PR or diff reviewed (e.g. "review this PR", "check this diff") once implementation has produced a PR or a meaningful branch diff. Collects track-specific context (issue, plan, task, risk targets), reviews the diff and review comments, applies safe fixes, and escalates design or scope-changing feedback.
-  Skip: no PR and no meaningful branch diff exists yet — use `implement` first.
+  Skip: no PR and no meaningful branch diff exists yet — use `butter-workflow-implement` first.
 ---
 
 # Butter Workflow Code Review

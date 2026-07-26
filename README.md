@@ -73,24 +73,25 @@ Finish up and capture preferences.
 To be explicit about which stage runs, mention the skill by name instead:
 
 ```text
-Use the `start` skill with <task context>
-Use the `implement` skill
-Use the `code-review` skill with <PR URL>
-Use the `finish` skill
+Use the `butter-workflow-start` skill with <task context>
+Use the `butter-workflow-implement` skill
+Use the `butter-workflow-code-review` skill with <PR URL>
+Use the `butter-workflow-finish` skill
 ```
 
-On Codex, skills are invoked with a `$` prefix (`$start`, `$implement`,
-`$code-review`, `$finish`).
+On Codex, skills are invoked with a `$` prefix (`$butter-workflow-start`,
+`$butter-workflow-implement`, `$butter-workflow-code-review`,
+`$butter-workflow-finish`).
 
 ### Skills
 
 | Skill | Role |
 |---|---|
-| `start` | Starts a workflow from the context the user provides, classifies track type, plans the working branch name, writes spec docs for every track, and summarizes the written files as hyperlinks before pausing for approval. |
-| `implement` | Creates or switches to the working branch, implements the approved spec for any track, verifies changes, commits, pushes, and creates a PR. |
-| `code-review` | Reviews a PR or branch diff with issue, plan, task, and risk-target context. |
-| `finish` | Captures reusable user preferences after a workflow. |
-| `user-preferences` | Provides the shared preference data model and bootstrap template. |
+| `butter-workflow-start` | Starts a workflow from the context the user provides, classifies track type, plans the working branch name, writes spec docs for every track, and summarizes the written files as hyperlinks before pausing for approval. |
+| `butter-workflow-implement` | Creates or switches to the working branch, implements the approved spec for any track, verifies changes, commits, pushes, and creates a PR. |
+| `butter-workflow-code-review` | Reviews a PR or branch diff with issue, plan, task, and risk-target context. |
+| `butter-workflow-finish` | Captures reusable user preferences after a workflow. |
+| `butter-workflow-user-preferences` | Provides the shared preference data model and bootstrap template. |
 
 ## Track Model
 

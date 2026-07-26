@@ -167,8 +167,8 @@ user-level location:
 `candidates.md` stores observations that need more evidence before promotion.
 `rejected.md` records patterns that should not be generalized.
 
-The `user-preferences` skill provides the data model and templates used by the
-workflow.
+The `butter-workflow-user-preferences` skill provides the data model and
+templates used by the workflow.
 
 ## Recommended Cross-Tool Flow
 
