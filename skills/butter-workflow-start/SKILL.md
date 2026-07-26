@@ -1,7 +1,8 @@
 ---
-name: start
-user-invocable: false
-description: Start a Spec-Driven Development workflow from the context the user provides. Use when the user wants Codex to classify Track A/B/C, plan the working branch, bootstrap user-preferences, and write docs/specs spec files for every track before pausing for user approval.
+name: butter-workflow-start
+description: |-
+  Trigger: the user wants to begin, kick off, or scope a new piece of work (e.g. "start this task", "let's plan this out", references a new issue/ticket) with no existing spec for it yet. Classifies Track A/B/C, plans the working branch, bootstraps shared preference data, and writes docs/specs/{TASK-ID} spec files for every track before pausing for approval.
+  Skip: an approved docs/specs/{TASK-ID}/00-META.md already exists for the current task (Status is planned or later) — use `butter-workflow-implement` instead to continue that work.
 ---
 
 # Butter Workflow Start
@@ -15,13 +16,11 @@ Start a workflow from the context the user provides and leave enough repository 
 ## Workflow
 
 1. Read repository instructions first: `AGENTS.md`, `CLAUDE.md`, `.cursorrules`, or equivalent files when present.
-2. Bootstrap global `user-preferences` if missing:
-   - Source template: `skills/user-preferences/`.
-   - Runtime skill locations:
-     - `~/.claude/skills/user-preferences/SKILL.md`
-     - `~/.agents/skills/user-preferences/SKILL.md`
-   - Shared data location: `~/.agents/preferences/`.
-   - Create missing `active.md`, `candidates.md`, and `rejected.md` from the template files under `skills/user-preferences/references/`.
+2. Bootstrap shared preference data under `~/.agents/preferences/` if missing:
+   - Use this skill's `references/active.template.md`,
+     `references/candidates.template.md`, and
+     `references/rejected.template.md`.
+   - Create only missing `active.md`, `candidates.md`, and `rejected.md`.
    - Preserve existing preference data.
 3. Read `~/.agents/preferences/active.md` when it exists. Do not read `candidates.md` during start.
 4. Understand the task from the provided context. Use it as-is and do not ask for any particular input form. When the context references retrievable external resources, enrich your understanding with available Jira/GitHub MCP tools, or with `gh` for GitHub when MCP is unavailable.

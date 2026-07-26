@@ -5,12 +5,11 @@
 <h1 align="center">Butter Workflow</h1>
 
 <p align="center">
-  Portable issue-based Spec-Driven Development for Claude Code and Codex.
+  Portable issue-based Spec-Driven Development for AI coding agents that support Agent Skills.
 </p>
 
 <p align="center">
-  <img alt="Claude Code plugin" src="https://img.shields.io/badge/Claude%20Code-plugin-111827?style=flat-square">
-  <img alt="Codex plugin" src="https://img.shields.io/badge/Codex-plugin-10A37F?style=flat-square">
+  <img alt="Agent Skill" src="https://img.shields.io/badge/Agent%20Skill-SKILL.md-111827?style=flat-square">
   <img alt="Spec-driven workflow" src="https://img.shields.io/badge/workflow-spec--driven-F59E0B?style=flat-square">
 </p>
 
@@ -18,8 +17,7 @@
   <a href="#what-it-provides">What It Provides</a> ·
   <a href="docs/workflow-proposal.md">Workflow Design</a> ·
   <a href="#installation">Installation</a> ·
-  <a href="#claude-usage">Claude Usage</a> ·
-  <a href="#codex-usage">Codex Usage</a> ·
+  <a href="#usage">Usage</a> ·
   <a href="#track-model">Track Model</a>
 </p>
 
@@ -32,74 +30,68 @@ handoff model.
 ## What It Provides
 
 - Four shared workflow stages: start, implement, code-review, and finish.
-- Claude Code commands as thin wrappers over the same shared skill logic.
-- Codex skills loaded from the same `skills/` directory.
+- One shared skill set (`skills/`) for agents supporting the Agent Skills
+  format (`SKILL.md`) — no tool-specific command wrappers.
 - Track A/B/C routing for small changes, planned changes, and high-risk changes.
 - Handoff spec documents under `docs/specs/{TASK-ID}/` for every track.
 - Shared user preference memory under `~/.agents/preferences/`.
 
 ## Installation
 
-Install Butter Workflow from the GitHub marketplace repository. You do not need
-to clone this repository for normal installation.
-
-### Claude Code
-
-Add the GitHub repository as a Claude Code marketplace, then install the plugin:
+Install directly from this GitHub repository with the
+[skills.sh](https://www.skills.sh/) CLI. No clone required:
 
 ```bash
-claude plugin marketplace add ypjun100/butter-workflow --scope user
-claude plugin install butter-workflow@butter-workflow --scope user
+npx skills add ypjun100/butter-workflow -g
 ```
 
-Use `--scope project` instead of `--scope user` when the marketplace and plugin
-should be registered only for the current project.
-
-### Codex
-
-Add the GitHub repository as a Codex marketplace, then install the plugin:
+The `-g` flag makes the workflow available across projects. Update the global
+installation to the latest version later with:
 
 ```bash
-codex plugin marketplace add ypjun100/butter-workflow
-codex plugin add butter-workflow@butter-workflow
+npx skills update -g
 ```
 
-Restart the tool or start a new session after installing so newly loaded commands and skills are available.
+The CLI supports Claude Code, Codex, and the other agents in its supported-agent
+list. Agent-specific skill features may vary. Trade-off to know: unlike a
+plugin marketplace, this installation path has no version pinning or changelog
+UI — it installs whatever is on the default branch, so check this repository's
+commit history before updating if that matters to you. Restart the tool or
+start a new session after installing so the newly loaded skills are available.
 
-## Claude Usage
+## Usage
 
-Use the command wrappers:
+Describe your intent in natural language and the matching stage runs
+automatically:
 
 ```text
-/butter-workflow:start <task context>
-/butter-workflow:implement
-/butter-workflow:code-review <PR URL>
-/butter-workflow:finish
+Start this task: <task context>
+Implement the approved plan.
+Review this PR: <PR URL>
+Finish up and capture preferences.
 ```
 
-## Codex Usage
-
-Use the skills directly:
+To be explicit about which stage runs, mention the skill by name instead:
 
 ```text
-Use $butter-workflow:start with <task context>
-Use $butter-workflow:implement
-Use $butter-workflow:code-review with <PR URL>
-Use $butter-workflow:finish
+Use the `butter-workflow-start` skill with <task context>
+Use the `butter-workflow-implement` skill
+Use the `butter-workflow-code-review` skill with <PR URL>
+Use the `butter-workflow-finish` skill
 ```
 
-Codex namespaces plugin skills as `$plugin-name:skill-name`, so the Butter
-Workflow skills use short stage names.
+On Codex, skills are invoked with a `$` prefix (`$butter-workflow-start`,
+`$butter-workflow-implement`, `$butter-workflow-code-review`,
+`$butter-workflow-finish`).
 
 ### Skills
 
 | Skill | Role |
 |---|---|
-| `start` | Starts a workflow from the context the user provides, classifies track type, plans the working branch name, writes spec docs for every track, and summarizes the written files as hyperlinks before pausing for approval. |
-| `implement` | Creates or switches to the working branch, implements the approved spec for any track, verifies changes, commits, pushes, and creates a PR. |
-| `code-review` | Reviews a PR or branch diff with issue, plan, task, and risk-target context. |
-| `finish` | Captures reusable user preferences after a workflow. |
-| `user-preferences` | Provides the shared preference data model and bootstrap template. |
+| `butter-workflow-start` | Starts a workflow from the context the user provides, classifies track type, plans the working branch name, writes spec docs for every track, and summarizes the written files as hyperlinks before pausing for approval. |
+| `butter-workflow-implement` | Creates or switches to the working branch, implements the approved spec for any track, verifies changes, commits, pushes, and creates a PR. |
+| `butter-workflow-code-review` | Reviews a PR or branch diff with issue, plan, task, and risk-target context. |
+| `butter-workflow-finish` | Captures reusable user preferences after a workflow. |
 
 ## Track Model
 
