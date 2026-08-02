@@ -18,7 +18,8 @@
   <a href="docs/workflow-proposal.md">Workflow Design</a> ·
   <a href="#installation">Installation</a> ·
   <a href="#usage">Usage</a> ·
-  <a href="#track-model">Track Model</a>
+  <a href="#track-model">Track Model</a> ·
+  <a href="#preference-capture">Preference Capture</a>
 </p>
 
 Butter Workflow keeps the working context in repository files so a task can
@@ -29,12 +30,13 @@ handoff model.
 
 ## What It Provides
 
-- Four shared workflow stages: start, implement, code-review, and finish.
+- Three shared workflow stages: start, implement, and code-review.
 - One shared skill set (`skills/`) for agents supporting the Agent Skills
   format (`SKILL.md`) — no tool-specific command wrappers.
 - Track A/B/C routing for small changes, planned changes, and high-risk changes.
 - Handoff spec documents under `docs/specs/{TASK-ID}/` for every track.
-- Shared user preference memory under `~/.agents/preferences/`.
+- Shared user preference memory under `~/.agents/preferences/`, captured
+  automatically as you work.
 
 ## Installation
 
@@ -68,7 +70,6 @@ automatically:
 Start this task: <task context>
 Implement the approved plan.
 Review this PR: <PR URL>
-Finish up and capture preferences.
 ```
 
 To be explicit about which stage runs, mention the skill by name instead:
@@ -77,12 +78,10 @@ To be explicit about which stage runs, mention the skill by name instead:
 Use the `butter-workflow-start` skill with <task context>
 Use the `butter-workflow-implement` skill
 Use the `butter-workflow-code-review` skill with <PR URL>
-Use the `butter-workflow-finish` skill
 ```
 
 On Codex, skills are invoked with a `$` prefix (`$butter-workflow-start`,
-`$butter-workflow-implement`, `$butter-workflow-code-review`,
-`$butter-workflow-finish`).
+`$butter-workflow-implement`, `$butter-workflow-code-review`).
 
 ### Skills
 
@@ -90,14 +89,38 @@ On Codex, skills are invoked with a `$` prefix (`$butter-workflow-start`,
 |---|---|
 | `butter-workflow-start` | Starts a workflow from the context the user provides, classifies track type, plans the working branch name, writes spec docs for every track, and summarizes the written files as hyperlinks before pausing for approval. |
 | `butter-workflow-implement` | Creates or switches to the working branch, implements the approved spec for any track, verifies changes, commits, pushes, and creates a PR. |
-| `butter-workflow-code-review` | Reviews a PR or branch diff with issue, plan, task, and risk-target context. |
-| `butter-workflow-finish` | Captures reusable user preferences after a workflow. |
+| `butter-workflow-code-review` | Reviews a PR or branch diff with issue, plan, task, and risk-target context, then closes out the workflow. |
+
+All three stages also capture reusable preferences while they run. See
+[Preference Capture](#preference-capture).
 
 ## Track Model
 
 - Track A: small low-risk changes; writes a lightweight spec (`00-META.md` + `01-SPEC.md`) and pauses for approval before implementing.
 - Track B: planned feature or fix within existing architecture; creates the full `docs/specs/{TASK-ID}/` set.
 - Track C: high-risk Track B work involving auth, security, payment, permissions, shared core, architecture, migration, or broad refactor risk; adds `Risk Review Targets`.
+
+## Preference Capture
+
+Every stage watches for reusable preferences in what you say and records them
+as it goes, so nothing depends on remembering to run a wrap-up step.
+
+```text
+~/.agents/preferences/
+  active.md      # confirmed preferences; the only ones applied to your work
+  candidates.md  # seen once, waiting for a second sighting
+  rejected.md    # never generalize these again
+```
+
+A new preference lands in `candidates.md`. The next time the same preference
+shows up, it is promoted to `active.md`. Anything in `rejected.md` is never
+recorded, and a request that contradicts an existing active preference stops
+for your decision instead of overwriting it.
+
+Only generalizable rules are captured. "Prefix comments with `NOTE:`" is a
+preference; "rename this function" is not. Each record or promotion is
+reported in a single line at the end of the response, so you can correct a bad
+capture right away.
 
 ## Tool Rules
 
@@ -116,7 +139,7 @@ docs/specs/{TASK-ID}/
   01-SPEC.md
 ```
 
-Track B/C add the plan, task, and preference files:
+Track B/C add the plan and task files:
 
 ```text
 docs/specs/{TASK-ID}/
@@ -124,7 +147,8 @@ docs/specs/{TASK-ID}/
   01-SPEC.md
   02-PLAN.md
   03-TASK-*.md
-  04-PREFERENCES.md
 ```
 
-`00-META.md` is the current workflow state source of truth. `04-PREFERENCES.md` is only an input for finish-stage preference capture.
+`00-META.md` is the current workflow state source of truth. Its `Status` moves
+`planned` → `implemented` → `reviewed`, ending at `reviewed`. Preference data
+never lives in the spec directory; it lives in `~/.agents/preferences/`.

@@ -8,8 +8,8 @@ the Claude Code and Codex plugin implementations follow.
 
 Butter Workflow makes agentic development portable across tools and sessions by
 using repository files as the source of truth. A task can start in Claude Code,
-continue in Codex, return for implementation, and finish with reusable
-preferences captured without relying on chat history.
+continue in Codex, and return for implementation without relying on chat
+history, while reusable preferences accumulate in a shared user-level store.
 
 The workflow is issue-based and Spec-Driven. Every non-trivial task starts from
 an issue, link, or clear task context, then follows a track selected by risk and
@@ -24,8 +24,8 @@ planning depth.
 - Use `git` for repository work such as branch, status, diff, commit, and push.
 - Use `gh` only for GitHub PR work when MCP tools are unavailable.
 - Avoid bundling external service credentials or MCP setup into the plugin.
-- Capture reusable user preferences after a workflow, but keep project rules in
-  project files such as `AGENTS.md`.
+- Capture reusable user preferences continuously, at every stage, but keep
+  project rules in project files such as `AGENTS.md`.
 
 ## Track Model
 
@@ -63,7 +63,6 @@ docs/specs/{TASK-ID}/
   01-SPEC.md
   02-PLAN.md
   03-TASK-*.md
-  04-PREFERENCES.md
 ```
 
 Use Track B when:
@@ -98,8 +97,7 @@ check out the branch; the implement stage does that.
 
 Start writes the spec for the chosen track and then stops for user approval
 before implementation. For Track A it writes a lightweight spec (`00-META.md`
-and `01-SPEC.md`). For Track B or C it also writes the plan, task files, and
-preference capture notes.
+and `01-SPEC.md`). For Track B or C it also writes the plan and task files.
 
 ### 2. Implement
 
@@ -123,15 +121,8 @@ boundary mistakes, and mismatches between the plan and implementation. Feedback
 is either applied directly when low-risk or returned to the user when judgment
 is needed.
 
-### 4. Finish
-
-The finish stage closes the workflow by collecting reusable observations. For
-Track B and C, it reads `04-PREFERENCES.md` along with relevant review and
-implementation context.
-
-Stable preferences are promoted into the user's shared preference store.
-One-off observations stay as candidates, and rejected generalizations are
-recorded to avoid repeating them.
+Code review is the last stage. It sets `Status: reviewed`, which is the
+terminal state of the workflow.
 
 ## Handoff Model
 
@@ -167,9 +158,40 @@ user-level location:
 `candidates.md` stores observations that need more evidence before promotion.
 `rejected.md` records patterns that should not be generalized.
 
-The workflow stages enforce the preference data model directly. Bootstrap
-templates are bundled as resources of `butter-workflow-start`, so no internal
-helper skill is exposed to users.
+Bootstrap templates are bundled as resources of `butter-workflow-start`, so no
+internal helper skill is exposed to users. The three files share one set of
+category headings, because promotion moves an entry between files within the
+same category.
+
+### Capture Timing
+
+Capture is continuous, not a closing step. Every stage evaluates the user
+messages it receives — including the ones that arrive after the stage's main
+work is done, such as spec feedback and follow-up fix requests — and records
+what generalizes.
+
+### Promotion
+
+A newly observed preference is written to `candidates.md`. Observing the same
+preference again promotes it to `active.md` and removes it from `candidates.md`.
+An entry in `rejected.md` blocks recording outright, and a request that
+contradicts an existing active preference is escalated to the user rather than
+applied silently.
+
+Equivalence is judged by meaning rather than by exact wording, so the same rule
+phrased two different ways is treated as one entry.
+
+### Read Versus Apply
+
+`active.md` is the only execution context. Stages read `candidates.md` and
+`rejected.md` solely to decide whether an observation is new, a promotion, or
+blocked. An unconfirmed candidate never becomes a working rule.
+
+### Reporting
+
+A record or a promotion is reported in one line at the end of the response that
+triggered it. Capture never asks for approval first, which keeps it out of the
+way while still letting the user correct a wrong capture immediately.
 
 ## Recommended Cross-Tool Flow
 
@@ -179,7 +201,6 @@ One recommended flow is:
 Claude Code start
 Claude Code implement
 Codex code-review
-Claude Code finish
 ```
 
 This is only a recommendation. Any stage can run in either tool as long as the
@@ -205,7 +226,7 @@ docs/specs/{TASK-ID}/
   01-SPEC.md
 ```
 
-Track B and Track C add the plan, task, and preference files:
+Track B and Track C add the plan and task files:
 
 ```text
 docs/specs/{TASK-ID}/
@@ -213,8 +234,7 @@ docs/specs/{TASK-ID}/
   01-SPEC.md
   02-PLAN.md
   03-TASK-*.md
-  04-PREFERENCES.md
 ```
 
-`00-META.md` is the current workflow state source of truth.
-`04-PREFERENCES.md` is only an input for finish-stage preference capture.
+`00-META.md` is the current workflow state source of truth. Preference data is
+never written into the spec directory.
