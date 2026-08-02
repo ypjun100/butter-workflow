@@ -1,7 +1,7 @@
 ---
 name: butter-workflow-implement
 description: |-
-  Trigger: docs/specs/{TASK-ID}/00-META.md exists with Status planned or later, and the user approves that spec or asks for it to be built ("implement this", "build the approved plan", "continue the implementation"). Both conditions are required. Reads workflow state, applies the approved track scope, runs verification, commits task-sized changes, pushes, and creates or updates a PR.
+  Trigger: docs/specs/{TASK-ID}/00-META.md exists with Status planned, and the user approves that spec or asks for it to be built ("implement this", "build the approved plan", "continue the implementation"). Both conditions are required. Reads workflow state, applies the approved track scope, runs verification, commits task-sized changes, pushes, and creates or updates a PR.
   Skip: no docs/specs/{TASK-ID}/00-META.md exists — the user never started a Butter Workflow, so do the requested work directly rather than pulling in this stage. Also skip for spec-file edits and single follow-up fixes inside an active workflow — apply those directly. Also skip once a PR already exists and is awaiting review — use `butter-workflow-code-review` instead.
 ---
 
