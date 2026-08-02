@@ -1,13 +1,28 @@
 ---
 name: butter-workflow-start
 description: |-
-  Trigger: the user wants to begin, kick off, or scope a new piece of work (e.g. "start this task", "let's plan this out", references a new issue/ticket) with no existing spec for it yet. Classifies Track A/B/C, plans the working branch, bootstraps shared preference data, and writes docs/specs/{TASK-ID} spec files for every track before pausing for approval.
-  Skip: an approved docs/specs/{TASK-ID}/00-META.md already exists for the current task (Status is planned or later) — use `butter-workflow-implement` instead to continue that work.
+  Trigger: the user names this skill or Butter Workflow itself — `/butter-workflow-start`, `$butter-workflow-start`, "use the butter-workflow-start skill", or a request that mentions Butter Workflow by name. Classifies Track A/B/C, plans the working branch, bootstraps shared preference data, and writes docs/specs/{TASK-ID} spec files for every track before pausing for approval.
+  Skip: the request only describes work to do — "start this task", "let's plan this out", a pasted issue link — without naming this skill or Butter Workflow; do that work directly instead. Also skip when an approved docs/specs/{TASK-ID}/00-META.md already exists for the current task (Status is planned or later) — use `butter-workflow-implement` to continue that work.
 ---
 
 # Butter Workflow Start
 
 Start a workflow from the context the user provides and leave enough repository state for another tool or session to continue.
+
+## Invocation
+
+Run this stage only when the user named it. Naming means the tool's invocation
+syntax (`/butter-workflow-start`, `$butter-workflow-start`) or a plain mention
+of this skill or of Butter Workflow. Describing a task is not naming it, however
+much it sounds like the start of one.
+
+This stage is the exception among the three. The later stages can be inferred
+from repository state that proves a workflow is running; before this stage runs,
+no such state exists, so the user's declaration is the only signal.
+
+If this stage was entered from a message that only described work, say so in one
+line and ask whether to run the workflow or just do the work — before reading
+repository state and before writing any file.
 
 ## Inputs
 
@@ -48,6 +63,19 @@ Start a workflow from the context the user provides and leave enough repository 
     - Give the user the spec directory path.
     - Summarize what was written: list every spec file created in this run, each rendered as a clickable Markdown link to the file (for example, `[00-META.md](/absolute/path/to/docs/specs/{TASK-ID}/00-META.md)`), with a short note of what each covers. List only files actually written for the track (Track A: `00-META.md`, `01-SPEC.md`; Track B/C: the full set including every `03-TASK-*.md` written). Never list a file that was not written.
     - Wait for approval before implementation.
+
+## Follow-Up Requests
+
+This stage stays paused once the spec is written. An active workflow does not
+make every later message a stage transition. Route the next one:
+
+- Spec change ("fix X in the spec", "add Y to the plan") — edit the named spec
+  file, restate what changed, and stay paused. Do not re-run this stage and do
+  not start implementing.
+- Approval to build ("looks good, start implementing") — hand off to
+  `butter-workflow-implement`.
+- Anything else — an ordinary request; carry it out directly. This stage runs
+  again only when the user names it again.
 
 ## Preference Capture
 
