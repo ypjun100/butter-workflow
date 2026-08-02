@@ -72,12 +72,7 @@ $butter-workflow-start <task context>          # Codex
 Use the butter-workflow-start skill with <task context>
 ```
 
-Naming it is the point. Before a workflow exists there is no repository state
-to check, so "start this task" cannot be told apart from an ordinary request to
-go do the work. The later stages do have that state — a spec directory, a
-status, a PR — so only this one needs a declaration.
-
-Once a spec exists, the remaining stages run from plain language:
+The remaining stages run from plain language:
 
 ```text
 Looks good, start implementing.   ->  butter-workflow-implement
