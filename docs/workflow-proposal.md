@@ -170,11 +170,6 @@ messages it receives — including the ones that arrive after the stage's main
 work is done, such as spec feedback and follow-up fix requests — and records
 what generalizes.
 
-An earlier version of this workflow had a fourth stage that captured
-preferences at the end. It depended on the user remembering to run it, so
-anything expressed mid-workflow was lost whenever they did not. Continuous
-capture removes that dependency.
-
 ### Promotion
 
 A newly observed preference is written to `candidates.md`. Observing the same
