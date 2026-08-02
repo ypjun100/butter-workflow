@@ -42,7 +42,7 @@ Implement the approved spec while preserving the docs as the handoff surface.
     - Set `Status: implemented`.
     - Fill `PR URL` when known.
     - Commit the metadata update if it is part of the implementation branch.
-11. Recommend the `butter-workflow-code-review` skill.
+11. Recommend the `butter-workflow-code-review` skill. It is the last stage of the workflow.
 
 ## Preference Capture
 

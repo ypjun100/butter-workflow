@@ -36,7 +36,7 @@ Review the implemented diff with context from the issue and workflow docs.
 9. Apply immediate fixes when safe, run targeted verification, commit, and push.
 10. Present user-decision items with the feedback, benefit, downside, recommendation, and why user input is needed.
 11. Update PR body or comment with review/fix summary when a PR is available.
-12. Update `00-META.md` to `Status: reviewed` only after review and required safe fixes are complete.
+12. Update `00-META.md` to `Status: reviewed` only after review and required safe fixes are complete. `reviewed` is the terminal state: the workflow ends here, and preferences were already captured along the way by `## Preference Capture`.
 
 ## Preference Capture
 

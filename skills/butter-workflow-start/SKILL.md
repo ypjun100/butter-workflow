@@ -42,7 +42,7 @@ Start a workflow from the context the user provides and leave enough repository 
 10. Do not create or check out any branch during start. The working branch is only recorded as the planned value in `00-META.md`; the implement stage creates and checks it out.
 11. Write the spec by track. Do not implement, commit, push, or open a PR during start for any track.
     - Track A: create `docs/specs/{TASK-ID}/` and write only `00-META.md` and `01-SPEC.md` (lightweight spec).
-    - Track B/C: create `docs/specs/{TASK-ID}/` and write `00-META.md`, `01-SPEC.md`, `02-PLAN.md`, one or more `03-TASK-*.md`, and `04-PREFERENCES.md`.
+    - Track B/C: create `docs/specs/{TASK-ID}/` and write `00-META.md`, `01-SPEC.md`, `02-PLAN.md`, and one or more `03-TASK-*.md`.
 12. For Track C, add `## Risk Review Targets` to `02-PLAN.md` and self-check whether each high-risk scope has review focus.
 13. Stop in feedback mode after writing the spec for every track (A/B/C):
     - Give the user the spec directory path.
@@ -110,11 +110,11 @@ Say nothing when no preference was recorded.
 ## Document Rules
 
 - `00-META.md` is the workflow state source of truth for every track.
-- Track A writes only `00-META.md` and `01-SPEC.md`. `02-PLAN.md`, `03-TASK-*.md`, and `04-PREFERENCES.md` are Track B/C only.
+- Track A writes only `00-META.md` and `01-SPEC.md`. `02-PLAN.md` and `03-TASK-*.md` are Track B/C only.
 - `01-SPEC.md` describes what users need and success criteria. Do not include function names, file names, or implementation choices.
 - `02-PLAN.md` describes architecture boundaries, module responsibilities, call flow, data/API shape, test strategy, constraints, and task split.
 - `03-TASK-*.md` files must be implementable units and should align with commit-sized changes.
-- `04-PREFERENCES.md` records user feedback and preference candidates for finish only. Do not store workflow status there.
+- Preference data belongs in `~/.agents/preferences/`, never in the spec directory. See `## Preference Capture`.
 - Keep verification logs out of files. Summarize verification in the PR body or final response.
 
 ## Git And External Tools
@@ -137,17 +137,5 @@ Say nothing when no preference was recorded.
 - Status: planned
 ```
 
-`04-PREFERENCES.md` (Track B/C only):
-
-```markdown
-# Preferences
-
-## User Feedback
-- None yet.
-
-## Preference Candidates
-- None yet.
-
-## Rejected Candidates
-- None yet.
-```
+`Status` moves `planned` → `implemented` → `reviewed`. `reviewed` is the
+terminal state; there is no separate finish stage.
