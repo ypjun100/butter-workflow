@@ -19,3 +19,9 @@ Confirmed user preferences that should affect planning, implementation, and revi
 
 ## Review And PR
 - None yet.
+
+## Working Style
+- None yet.
+
+## Communication
+- None yet.
