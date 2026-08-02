@@ -86,6 +86,29 @@ Use Track C when the work touches:
 - Data migrations or irreversible state changes.
 - Architecture-level decisions with broad blast radius.
 
+## Invocation Model
+
+The three stages are not entered the same way.
+
+Implement and code review are entered from repository state that proves a
+workflow is already running: a spec directory exists, `00-META.md` carries a
+status, a PR is open. That state is checkable, so these stages can be inferred
+from plain language.
+
+Start has no such state. Before it runs, nothing in the repository says a
+workflow is beginning, so the only available signal is phrasing — and "start
+this task" is indistinguishable from an ordinary request to go do the work. The
+user therefore declares the start explicitly by naming the skill.
+
+Routing resolves in this order:
+
+1. The user names the start skill or Butter Workflow — run the start stage.
+2. The state for a later stage exists and the request asks for that stage's
+   work — run that stage. Either condition alone is not enough.
+3. Otherwise — handle the request directly. This is the default, and it stays
+   the default inside a running workflow: editing a spec document or applying a
+   named fix is an ordinary request, not a stage transition.
+
 ## Workflow Stages
 
 ### 1. Start
