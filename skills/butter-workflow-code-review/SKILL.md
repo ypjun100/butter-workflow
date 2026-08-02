@@ -1,8 +1,8 @@
 ---
 name: butter-workflow-code-review
 description: |-
-  Trigger: the user wants a PR or diff reviewed (e.g. "review this PR", "check this diff") once implementation has produced a PR or a meaningful branch diff. Collects track-specific context (issue, plan, task, risk targets), reviews the diff and review comments, applies safe fixes, and escalates design or scope-changing feedback.
-  Skip: no PR and no meaningful branch diff exists yet — use `butter-workflow-implement` first.
+  Trigger: docs/specs/{TASK-ID}/00-META.md exists with Status implemented or a recorded PR URL, and the user asks for that change to be reviewed ("review this PR", "check this diff"). Both conditions are required. Collects track-specific context (issue, plan, task, risk targets), reviews the diff and review comments, applies safe fixes, and escalates design or scope-changing feedback.
+  Skip: no docs/specs/{TASK-ID}/00-META.md exists — this is not a Butter Workflow, so handle the review request directly rather than pulling in this stage. Also skip when the user only wants specific feedback applied — apply, verify, commit, and push it directly. Also skip when nothing is implemented yet — use `butter-workflow-implement` first.
 ---
 
 # Butter Workflow Code Review
@@ -37,6 +37,18 @@ Review the implemented diff with context from the issue and workflow docs.
 10. Present user-decision items with the feedback, benefit, downside, recommendation, and why user input is needed.
 11. Update PR body or comment with review/fix summary when a PR is available.
 12. Update `00-META.md` to `Status: reviewed` only after review and required safe fixes are complete. `reviewed` is the terminal state: the workflow ends here, and preferences were already captured along the way by `## Preference Capture`.
+
+## Follow-Up Requests
+
+An active workflow does not make every later message a stage transition. Route
+the next one:
+
+- A specific fix requested after the review — apply it, run targeted
+  verification, commit, and push. Do not re-run the full review for it.
+- A request to review again after new commits — re-run this stage against the
+  updated diff.
+- Anything else — an ordinary request; carry it out directly. The workflow ends
+  at `Status: reviewed`.
 
 ## Preference Capture
 

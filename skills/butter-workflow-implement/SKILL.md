@@ -1,8 +1,8 @@
 ---
 name: butter-workflow-implement
 description: |-
-  Trigger: the user wants to build or continue implementing already-approved work (e.g. "implement this", "build the approved plan", "continue the implementation") once docs/specs/{TASK-ID}/00-META.md exists with an approved Status. Reads workflow state, applies the approved track scope, runs verification, commits task-sized changes, pushes, and creates or updates a PR.
-  Skip: no docs/specs/{TASK-ID}/00-META.md exists yet or the written spec has not been approved — use `butter-workflow-start` first. Also skip once a PR already exists and is awaiting review — use `butter-workflow-code-review` instead.
+  Trigger: docs/specs/{TASK-ID}/00-META.md exists with Status planned, and the user approves that spec or asks for it to be built ("implement this", "build the approved plan", "continue the implementation"). Both conditions are required. Reads workflow state, applies the approved track scope, runs verification, commits task-sized changes, pushes, and creates or updates a PR.
+  Skip: no docs/specs/{TASK-ID}/00-META.md exists — the user never started a Butter Workflow, so do the requested work directly rather than pulling in this stage. Also skip for spec-file edits and single follow-up fixes inside an active workflow — apply those directly. Also skip once a PR already exists and is awaiting review — use `butter-workflow-code-review` instead.
 ---
 
 # Butter Workflow Implement
@@ -43,6 +43,17 @@ Implement the approved spec while preserving the docs as the handoff surface.
     - Fill `PR URL` when known.
     - Commit the metadata update if it is part of the implementation branch.
 11. Recommend the `butter-workflow-code-review` skill. It is the last stage of the workflow.
+
+## Follow-Up Requests
+
+This stage is done once the PR exists. An active workflow does not make every
+later message a stage transition. Route the next one:
+
+- A specific code fix, or a list of feedback to apply — apply it, run targeted
+  verification, commit, and push to the working branch. Do not run
+  `butter-workflow-code-review` for it.
+- A request to review the change — hand off to `butter-workflow-code-review`.
+- A spec change — update the spec file, then make the matching code change.
 
 ## Preference Capture
 

@@ -63,31 +63,32 @@ start a new session after installing so the newly loaded skills are available.
 
 ## Usage
 
-Describe your intent in natural language and the matching stage runs
-automatically:
+Start a workflow by naming the start skill. This is the only stage that
+requires it:
 
 ```text
-Start this task: <task context>
-Implement the approved plan.
-Review this PR: <PR URL>
+/butter-workflow-start <task context>          # Claude Code and similar
+$butter-workflow-start <task context>          # Codex
+Use the butter-workflow-start skill with <task context>
 ```
 
-To be explicit about which stage runs, mention the skill by name instead:
+The remaining stages run from plain language:
 
 ```text
-Use the `butter-workflow-start` skill with <task context>
-Use the `butter-workflow-implement` skill
-Use the `butter-workflow-code-review` skill with <PR URL>
+Looks good, start implementing.   ->  butter-workflow-implement
+Review this PR: <PR URL>          ->  butter-workflow-code-review
 ```
 
-On Codex, skills are invoked with a `$` prefix (`$butter-workflow-start`,
-`$butter-workflow-implement`, `$butter-workflow-code-review`).
+Ordinary requests inside a running workflow stay ordinary. "Fix this line in
+the spec" edits the spec document; "apply this feedback" applies it, commits,
+and pushes. Neither advances a stage — only asking for the next stage's work
+does.
 
 ### Skills
 
 | Skill | Role |
 |---|---|
-| `butter-workflow-start` | Starts a workflow from the context the user provides, classifies track type, plans the working branch name, writes spec docs for every track, and summarizes the written files as hyperlinks before pausing for approval. |
+| `butter-workflow-start` | Starts a workflow when explicitly named, from the context the user provides: classifies track type, plans the working branch name, writes spec docs for every track, and summarizes the written files as hyperlinks before pausing for approval. |
 | `butter-workflow-implement` | Creates or switches to the working branch, implements the approved spec for any track, verifies changes, commits, pushes, and creates a PR. |
 | `butter-workflow-code-review` | Reviews a PR or branch diff with issue, plan, task, and risk-target context, then closes out the workflow. |
 
