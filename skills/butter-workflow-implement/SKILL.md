@@ -12,7 +12,7 @@ Implement the approved spec while preserving the docs as the handoff surface.
 ## Workflow
 
 1. Read repository instructions first.
-2. Read `~/.agents/preferences/preferences.md` when it exists and follow it while implementing. It is the only preference file; there is no separate "read but do not apply" tier.
+2. Read `~/.agents/preferences/preferences.md` when it exists and follow it while implementing. It is the only preference file.
 3. Find the active task docs:
    - Prefer the task id or path supplied by the user.
    - Otherwise inspect `docs/specs/*/00-META.md` and choose the one whose status is `planned` or whose working branch matches the current branch.

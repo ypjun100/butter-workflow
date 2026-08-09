@@ -111,10 +111,9 @@ goes, so nothing depends on remembering to run a wrap-up step.
   preferences.md  # everything captured, applied to your work from the next task on
 ```
 
-One file, applied immediately. There is no waiting period and no second
-sighting to earn: if it is worth recording, it is worth using. A request that
-contradicts an earlier entry replaces it, since your latest word is the current
-one — the swap is reported so you can put it back.
+One file, applied immediately: say something once and it shapes the next task.
+A request that contradicts an entry already in the file replaces it, since your
+latest word is the current one — the swap is reported so you can put it back.
 
 The bar is low on purpose. Anything that would help write a better plan,
 change, or review next time gets captured, and the rule is extracted from
@@ -129,13 +128,13 @@ whatever you happened to be talking about at the time:
 ```
 
 Neither of those is phrased as a preference, and both name something specific.
-Neither fact disqualifies them.
+Both are captured, because the rule is what matters and the rule generalizes.
 
-The judging runs in a separate agent alongside your actual request rather than
-before or after it, so a message carrying thirty pieces of feedback does not
-turn into thirty pieces of deliberation you have to sit through. Each record,
-replacement, or removal is reported in a single line at the end of the
-response, so you can correct a bad capture right away.
+The judging runs in a separate agent alongside your actual request, so a
+message carrying thirty pieces of feedback does not turn into thirty pieces of
+deliberation you have to sit through. Each record, replacement, or removal is
+reported in a single line at the end of the response, so you can correct a bad
+capture right away.
 
 ## Tool Rules
 

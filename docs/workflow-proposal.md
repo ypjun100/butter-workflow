@@ -177,8 +177,7 @@ user-level location:
 ```
 
 `preferences.md` holds everything captured so far, grouped under a fixed set of
-category headings. It is the only execution context, and there is no second
-tier that is read but not applied.
+category headings. Every stage reads it and applies it.
 
 The bootstrap template is bundled as a resource of `butter-workflow-start`, so
 no internal helper skill is exposed to users. Bootstrap creates the file when it
@@ -190,17 +189,15 @@ The bar is anything that would help write a better plan, change, or review on
 the next task. It is deliberately wider than what a user would call a
 "preference".
 
-Naming a specific file, function, or value does not disqualify a request. Real
-feedback arrives attached to an instance: users say "this component is too
-complex, simplify it", not "I prefer simple code". Excluding instance-shaped
-requests would exclude nearly everything, because the generality lives in the
-rule behind the request rather than in how the request is phrased. So the rule
+Feedback arrives attached to an instance. Users say "this component is too
+complex, simplify it", not "I prefer simple code". The generality sits in the
+rule behind the request rather than in how the request is phrased, so the rule
 is what gets extracted and stored. Uncertainty resolves toward recording, since
 a wrong entry takes one line to delete while a missing one is invisible.
 
-Four things are still skipped: an equivalent entry already stored, a rule
-already stated in the project instruction files, a pure one-off with no rule
-behind it, and a message with no content such as a bare approval.
+Four things are skipped: an equivalent entry already stored, a rule already
+stated in the project instruction files, a pure one-off with no rule behind it,
+and a message with no content such as a bare approval.
 
 Equivalence is judged by meaning rather than by exact wording, so the same rule
 phrased two different ways is treated as one entry.
@@ -212,9 +209,7 @@ messages it receives — including the ones that arrive after the stage's main
 work is done, such as spec feedback and follow-up fix requests.
 
 Recording takes effect immediately. A preference stated once shapes the very
-next task; there is no probation period and no second sighting to earn. If an
-observation is worth storing at all, withholding it until it recurs only makes
-the user repeat themselves.
+next task, so the user only has to say it once.
 
 ### Delegated Judgement
 

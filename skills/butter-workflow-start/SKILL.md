@@ -34,7 +34,7 @@ repository state and before writing any file.
 2. Bootstrap shared preference data under `~/.agents/preferences/`:
    - Use `preferences.md` when it exists.
    - Otherwise create it from this skill's `references/preferences.template.md`.
-3. Read `~/.agents/preferences/preferences.md` when it exists and apply it while writing the spec and plan. It is the only preference file; there is no separate "read but do not apply" tier.
+3. Read `~/.agents/preferences/preferences.md` when it exists and apply it while writing the spec and plan. It is the only preference file.
 4. Understand the task from the provided context. Use it as-is and do not ask for any particular input form. When the context references retrievable external resources, enrich your understanding with available Jira/GitHub MCP tools, or with `gh` for GitHub when MCP is unavailable.
 5. Collect project context:
    - Current branch and clean/dirty working tree.

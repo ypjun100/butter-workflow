@@ -12,7 +12,7 @@ Review the implemented diff with context from the issue and workflow docs.
 ## Workflow
 
 1. Read repository instructions first.
-2. Read `~/.agents/preferences/preferences.md` when it exists and review against it. It is the only preference file; there is no separate "read but do not apply" tier.
+2. Read `~/.agents/preferences/preferences.md` when it exists and review against it. It is the only preference file.
 3. Determine review target:
    - Prefer a PR URL supplied by the user or recorded in `00-META.md`.
    - Otherwise review the current branch diff against the base branch from `00-META.md`.
