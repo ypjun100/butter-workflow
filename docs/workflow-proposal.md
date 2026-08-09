@@ -25,8 +25,8 @@ planning depth.
 - Use `gh` only for GitHub PR work when MCP tools are unavailable.
 - Avoid bundling external service credentials or MCP setup into the plugin.
 - Capture user preferences continuously, at every stage, and keep the bar low
-  enough that a rule stated once takes effect. Project rules stay in project
-  files such as `AGENTS.md`.
+  enough that anything useful to the next task gets stored. Project rules stay
+  in project files such as `AGENTS.md`.
 
 ## Track Model
 
@@ -204,12 +204,11 @@ phrased two different ways is treated as one entry.
 
 ### Capture Timing
 
-Capture is continuous, not a closing step. Every stage evaluates the user
-messages it receives — including the ones that arrive after the stage's main
-work is done, such as spec feedback and follow-up fix requests.
+Capture runs throughout the workflow. Every stage evaluates the user messages it
+receives — including the ones that arrive after the stage's main work is done,
+such as spec feedback and follow-up fix requests.
 
-Recording takes effect immediately. A preference stated once shapes the very
-next task, so the user only has to say it once.
+A recorded preference applies from the next task onward.
 
 ### Delegated Judgement
 
@@ -238,10 +237,8 @@ user's latest instruction is their current one. The replacement is reported
 rather than applied silently. Asking instead is not an option available to a
 background agent.
 
-A user asking for an entry to be dropped removes it. There is no block list
-recording what must never be captured again, so the trade-off is that a removed
-entry can be captured again from a similar message later. A block list goes in
-if that turns out to happen; it is not worth carrying before then.
+A user asking for an entry to be dropped removes it. Removal is not permanent: a
+later message making the same point can put it back.
 
 ### Reporting
 

@@ -111,9 +111,9 @@ goes, so nothing depends on remembering to run a wrap-up step.
   preferences.md  # everything captured, applied to your work from the next task on
 ```
 
-One file, applied immediately: say something once and it shapes the next task.
 A request that contradicts an entry already in the file replaces it, since your
 latest word is the current one — the swap is reported so you can put it back.
+Asking for an entry to be dropped removes it.
 
 The bar is low on purpose. Anything that would help write a better plan,
 change, or review next time gets captured, and the rule is extracted from
