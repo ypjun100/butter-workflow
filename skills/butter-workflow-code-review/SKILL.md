@@ -117,7 +117,8 @@ Give the capture agent:
 
 Instruct it to:
 
-1. Read `preferences.md`. Create it from the template when missing.
+1. Read `preferences.md`. When it is missing, create it with the eight
+   category headings listed below, each holding `- None yet.`
 2. Read the project instruction files.
 3. Split the message into separate items. One message may carry dozens; judge
    each on its own.
