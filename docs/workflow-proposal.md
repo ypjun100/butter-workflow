@@ -184,23 +184,19 @@ The bootstrap template is bundled as a resource of `butter-workflow-start`, so
 no internal helper skill is exposed to users. Bootstrap creates the file when it
 is absent and otherwise leaves it alone.
 
-An earlier layout split this store into `active.md`, `candidates.md`, and
-`rejected.md`. Those files are no longer read, written, or deleted. Nothing is
-migrated out of them automatically.
-
 ### What Gets Captured
 
 The bar is anything that would help write a better plan, change, or review on
 the next task. It is deliberately wider than what a user would call a
 "preference".
 
-An earlier version restricted capture to observations that did not "depend on a
-specific file, function, value, or issue". In practice that excluded nearly
-everything, because real feedback arrives attached to an instance: users say
-"this component is too complex, simplify it", not "I prefer simple code". The
-generality lives in the rule behind the request, so the rule is what gets
-extracted and stored. Uncertainty resolves toward recording, since a wrong entry
-takes one line to delete while a missing one is invisible.
+Naming a specific file, function, or value does not disqualify a request. Real
+feedback arrives attached to an instance: users say "this component is too
+complex, simplify it", not "I prefer simple code". Excluding instance-shaped
+requests would exclude nearly everything, because the generality lives in the
+rule behind the request rather than in how the request is phrased. So the rule
+is what gets extracted and stored. Uncertainty resolves toward recording, since
+a wrong entry takes one line to delete while a missing one is invisible.
 
 Four things are still skipped: an equivalent entry already stored, a rule
 already stated in the project instruction files, a pure one-off with no rule
@@ -215,9 +211,10 @@ Capture is continuous, not a closing step. Every stage evaluates the user
 messages it receives — including the ones that arrive after the stage's main
 work is done, such as spec feedback and follow-up fix requests.
 
-Recording takes effect immediately. An earlier version held a first sighting as
-a candidate and applied it only after a second, which meant a user who stated a
-preference once saw no change in the next task.
+Recording takes effect immediately. A preference stated once shapes the very
+next task; there is no probation period and no second sighting to earn. If an
+observation is worth storing at all, withholding it until it recurs only makes
+the user repeat themselves.
 
 ### Delegated Judgement
 
@@ -226,10 +223,11 @@ handed verbatim to a separate capture agent, which runs alongside the work the
 user actually asked for. The stage decides only whether a message has content,
 never whether it is worth recording.
 
-This exists because the earlier design asked a main agent that was mid-task to
-also evaluate every message, and that evaluation was consistently the thing it
-dropped. Delegation also keeps the cost flat when one message carries dozens of
-separate points, and keeps the reasoning out of the main context.
+The split matters because an agent in the middle of the user's actual request
+will deprioritize any judgement attached to it. Handing the judgement to an
+agent that has nothing else to do is what makes capture reliable. It also keeps
+the cost flat when one message carries dozens of separate points, and keeps the
+reasoning out of the main context.
 
 Routing does not gate capture. A message handled as a spec edit or a code fix
 still reaches the capture agent.
@@ -246,9 +244,9 @@ rather than applied silently. Asking instead is not an option available to a
 background agent.
 
 A user asking for an entry to be dropped removes it. There is no block list
-recording what must never be captured again; the earlier `rejected.md` never
-accumulated a single entry and had no defined write path. The trade-off is that
-a removed entry can be captured again from a similar message later.
+recording what must never be captured again, so the trade-off is that a removed
+entry can be captured again from a similar message later. A block list goes in
+if that turns out to happen; it is not worth carrying before then.
 
 ### Reporting
 

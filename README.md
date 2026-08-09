@@ -129,17 +129,13 @@ whatever you happened to be talking about at the time:
 ```
 
 Neither of those is phrased as a preference, and both name something specific.
-That no longer disqualifies them.
+Neither fact disqualifies them.
 
 The judging runs in a separate agent alongside your actual request rather than
 before or after it, so a message carrying thirty pieces of feedback does not
 turn into thirty pieces of deliberation you have to sit through. Each record,
 replacement, or removal is reported in a single line at the end of the
 response, so you can correct a bad capture right away.
-
-Upgrading from an older version: the previous `active.md`, `candidates.md`, and
-`rejected.md` are left untouched and are no longer read. Move over anything you
-want to keep.
 
 ## Tool Rules
 
