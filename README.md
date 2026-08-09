@@ -35,8 +35,8 @@ handoff model.
   format (`SKILL.md`) — no tool-specific command wrappers.
 - Track A/B/C routing for small changes, planned changes, and high-risk changes.
 - Handoff spec documents under `docs/specs/{TASK-ID}/` for every track.
-- Shared user preference memory under `~/.agents/preferences/`, captured
-  automatically as you work.
+- Shared user preference memory under `~/.agents/preferences/preferences.md`,
+  captured automatically as you work.
 
 ## Installation
 
@@ -92,7 +92,7 @@ does.
 | `butter-workflow-implement` | Creates or switches to the working branch, implements the approved spec for any track, verifies changes, commits, pushes, and creates a PR. |
 | `butter-workflow-code-review` | Reviews a PR or branch diff with issue, plan, task, and risk-target context, then closes out the workflow. |
 
-All three stages also capture reusable preferences while they run. See
+All three stages also capture preferences while they run. See
 [Preference Capture](#preference-capture).
 
 ## Track Model
@@ -103,23 +103,36 @@ All three stages also capture reusable preferences while they run. See
 
 ## Preference Capture
 
-Every stage watches for reusable preferences in what you say and records them
-as it goes, so nothing depends on remembering to run a wrap-up step.
+Every stage watches for preferences in what you say and records them as it
+goes, so nothing depends on remembering to run a wrap-up step.
 
 ```text
 ~/.agents/preferences/
-  active.md      # confirmed preferences; the only ones applied to your work
-  candidates.md  # seen once, waiting for a second sighting
-  rejected.md    # never generalize these again
+  preferences.md  # everything captured, applied to your work from the next task on
 ```
 
-A new preference lands in `candidates.md`. The next time the same preference
-shows up, it is promoted to `active.md`. Anything in `rejected.md` is never
-recorded, and a request that contradicts an existing active preference stops
-for your decision instead of overwriting it.
+A request that contradicts an entry already in the file replaces it, since your
+latest word is the current one — the swap is reported so you can put it back.
+Asking for an entry to be dropped removes it.
 
-Only generalizable rules are captured. "Prefix comments with `NOTE:`" is a
-preference; "rename this function" is not. Each record or promotion is
+The bar is low on purpose. Anything that would help write a better plan,
+change, or review next time gets captured, and the rule is extracted from
+whatever you happened to be talking about at the time:
+
+```text
+"Write the plan in Korean, not English"
+  -> plan documents are written in Korean from now on
+
+"This component's logic is too complicated, unpack it"
+  -> favor simple, direct code over defensive handling for unlikely cases
+```
+
+Neither of those is phrased as a preference, and both name something specific.
+Both are captured, because the rule is what matters and the rule generalizes.
+
+The judging runs in a separate agent alongside your actual request, so a
+message carrying thirty pieces of feedback does not turn into thirty pieces of
+deliberation you have to sit through. Each record, replacement, or removal is
 reported in a single line at the end of the response, so you can correct a bad
 capture right away.
 
@@ -152,4 +165,5 @@ docs/specs/{TASK-ID}/
 
 `00-META.md` is the current workflow state source of truth. Its `Status` moves
 `planned` → `implemented` → `reviewed`, ending at `reviewed`. Preference data
-never lives in the spec directory; it lives in `~/.agents/preferences/`.
+never lives in the spec directory; it lives in
+`~/.agents/preferences/preferences.md`.

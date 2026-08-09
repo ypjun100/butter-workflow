@@ -12,7 +12,7 @@ Implement the approved spec while preserving the docs as the handoff surface.
 ## Workflow
 
 1. Read repository instructions first.
-2. Read `~/.agents/preferences/active.md` when it exists and follow it while implementing. Read `candidates.md` and `rejected.md` only for the duplicate and promotion checks in `## Preference Capture`; never apply a candidate as a working rule.
+2. Read `~/.agents/preferences/preferences.md` when it exists and follow it while implementing. It is the only preference file.
 3. Find the active task docs:
    - Prefer the task id or path supplied by the user.
    - Otherwise inspect `docs/specs/*/00-META.md` and choose the one whose status is `planned` or whose working branch matches the current branch.
@@ -55,67 +55,119 @@ later message a stage transition. Route the next one:
 - A request to review the change — hand off to `butter-workflow-code-review`.
 - A spec change — update the spec file, then make the matching code change.
 
+Routing is independent of `## Preference Capture`. Whichever branch a message
+takes, it still goes to a capture agent. A request to apply feedback is the
+most common source of preferences, not an exception to capture.
+
 ## Preference Capture
 
 Keep this section identical in `butter-workflow-start`,
 `butter-workflow-implement`, and `butter-workflow-code-review`. When you change
 one copy, change all three.
 
-Check every user message that arrives while this skill is active for a reusable
-preference. This includes messages sent after the stage's main work is done:
-spec feedback, approval comments, review replies, and follow-up fix requests.
+### What Counts
 
-Record one only when all of these hold:
+Record anything that would help you write a better plan, a better change, or a
+better review next time. The bar is deliberately low. It is not limited to what
+the user would call a "preference".
 
-- It still applies to the next task after this one ends.
-- It does not depend on a specific file, function, value, or issue.
-- It is not already stated in the project instruction files (`AGENTS.md`,
-  `CLAUDE.md`, or equivalent). Project rules are not preferences.
-- It is not in `~/.agents/preferences/rejected.md`.
+Most useful signals arrive attached to one specific thing. The user says "this
+component is too complex, simplify it", not "I like simple code". **Extract the
+general rule behind the request and record that rule.** Never skip a request
+just because it names a file, a function, or a value.
 
-These are not preferences: a specific bug fix, a rename or value change, a
-scope adjustment that applies only to this spec, a question, an approval, or a
-rejection.
+- "Write the plan in Korean, not English" → plan documents are written in
+  Korean from now on.
+- "This component's logic is too complicated, unpack it" → favor simple, direct
+  code; do not pile on defensive handling for unlikely cases.
+- "Leave the tool credit out of the commit message" → commit messages carry the
+  change description only.
 
-On a match, read all three files under `~/.agents/preferences/` and take the
-first branch that fits:
+When unsure, record it. A wrong entry costs the user one line to delete. A
+missing entry is invisible to them and never gets corrected.
 
-1. Equivalent entry in `rejected.md` — record nothing.
-2. Equivalent entry in `active.md` — do nothing.
-3. Contradicts an entry in `active.md` — change no file and ask the user which
-   one wins.
-4. Equivalent entry in `candidates.md` — remove it there and add it to
-   `active.md`. This is the promotion path.
-5. Otherwise — add it to `candidates.md`.
+Skip only these:
+
+- `preferences.md` already holds an entry that means the same thing.
+- The project instruction files (`AGENTS.md`, `CLAUDE.md`, or equivalent)
+  already state it. Project rules are not preferences.
+- It is a pure one-off with no rule behind it: a single value, a rename, a
+  scope tweak for this task alone.
+- It carries no content: a bare approval, acknowledgement, or rejection.
 
 Judge equivalence by meaning, not by string match. The same rule worded
 differently is the same entry.
 
-When writing:
+### Delegate The Judgement
 
-- Create a missing preference file before writing to it and preserve any
-  existing data.
-- Add or move single entries only. Never rewrite or reformat a whole file.
-- File the entry under one of `Planning`, `Architecture`, `Naming`, `Testing`,
+Do not decide what is worth recording yourself. When a user message carries any
+content at all — feedback, a request, a question, a correction — hand the
+message to a separate capture agent and get on with the work the user asked
+for. The two run in parallel.
+
+The only call you make is whether the message has content, not whether it is
+worth recording. A message that is nothing but "ok", "looks good", or "go
+ahead" needs no agent. Everything else gets one.
+
+This holds no matter how `## Follow-Up Requests` routes the message. A spec
+edit, a code fix, a list of review replies — each still gets a capture agent.
+Routing decides what work you do; it never decides whether capture happens.
+
+Give the capture agent:
+
+- The user's message, verbatim and unsummarized.
+- The current stage name.
+- The path `~/.agents/preferences/preferences.md` and the project instruction
+  file paths.
+
+Instruct it to:
+
+1. Read `preferences.md`. When it is missing, create it with the eight
+   category headings listed below, each holding `- None yet.`
+2. Read the project instruction files.
+3. Split the message into separate items. One message may carry dozens; judge
+   each on its own.
+4. Extract the general rule behind each item.
+5. Record the rule when it could shape a future plan, change, or review. Record
+   when unsure.
+6. Skip items that hit a skip condition.
+7. Replace the older entry when a new one contradicts it. Do not ask.
+8. Delete an entry when the user asks for it to be dropped.
+9. Write the file.
+10. Return one line per entry recorded, replaced, or deleted. Return nothing
+    otherwise.
+
+Writing rules for the agent:
+
+- Add, replace, or delete single entries only. Never rewrite or reformat the
+  whole file.
+- File each entry under one of `Planning`, `Architecture`, `Naming`, `Testing`,
   `Implementation`, `Review And PR`, `Working Style`, `Communication`. Add the
-  heading when the target file lacks it.
+  heading when the file lacks it.
 - Replace a section's `- None yet.` placeholder when adding its first real
-  entry to that section.
+  entry.
+- Never ask for approval first.
 
-Also apply the request to the current work. Recording it is not a substitute
-for acting on it.
+When the tool has no subagent mechanism, do the same work inline at the end of
+your response. Same criteria, same writing rules, same report. Only the place it
+runs changes.
 
-Do not ask for approval before recording. After a record or a promotion, end
-the response with one line, written in the language the user is working in:
+### Report
 
-- `Preference recorded (candidate): <one-line summary>`
-- `Preference promoted (active): <one-line summary>`
+Collect the capture agent's result before ending the turn and append its lines
+to your response, written in the language the user is working in:
 
-Say nothing when no preference was recorded.
+- `Preference recorded: <one-line summary>`
+- `Preference updated: <old entry> → <new entry>`
+- `Preference removed: <deleted entry>`
+
+Say nothing when nothing was recorded.
+
+Recording is never a substitute for acting. Apply the request to the current
+work as well.
 
 ## Constraints
 
 - Do not perform code review as a separate critique during implementation. Defer full diff review to the code-review stage.
-- Do not apply preference candidates as working rules. Only `active.md` is execution context; `candidates.md` and `rejected.md` are read solely for `## Preference Capture` bookkeeping.
 - Keep verification output out of files unless the repository already has a convention for test artifacts.
 - If the implementation materially differs from the spec (`01-SPEC.md`, or `02-PLAN.md` for Track B/C), update it before or with the code change.

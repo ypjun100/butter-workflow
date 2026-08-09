@@ -9,7 +9,7 @@ the Claude Code and Codex plugin implementations follow.
 Butter Workflow makes agentic development portable across tools and sessions by
 using repository files as the source of truth. A task can start in Claude Code,
 continue in Codex, and return for implementation without relying on chat
-history, while reusable preferences accumulate in a shared user-level store.
+history, while user preferences accumulate in a shared user-level store.
 
 The workflow is issue-based and Spec-Driven. Every non-trivial task starts from
 an issue, link, or clear task context, then follows a track selected by risk and
@@ -24,8 +24,9 @@ planning depth.
 - Use `git` for repository work such as branch, status, diff, commit, and push.
 - Use `gh` only for GitHub PR work when MCP tools are unavailable.
 - Avoid bundling external service credentials or MCP setup into the plugin.
-- Capture reusable user preferences continuously, at every stage, but keep
-  project rules in project files such as `AGENTS.md`.
+- Capture user preferences continuously, at every stage, and keep the bar low
+  enough that anything useful to the next task gets stored. Project rules stay
+  in project files such as `AGENTS.md`.
 
 ## Track Model
 
@@ -172,49 +173,79 @@ user-level location:
 
 ```text
 ~/.agents/preferences/
-  active.md
-  candidates.md
-  rejected.md
+  preferences.md
 ```
 
-`active.md` contains confirmed preferences that should influence future work.
-`candidates.md` stores observations that need more evidence before promotion.
-`rejected.md` records patterns that should not be generalized.
+`preferences.md` holds everything captured so far, grouped under a fixed set of
+category headings. Every stage reads it and applies it.
 
-Bootstrap templates are bundled as resources of `butter-workflow-start`, so no
-internal helper skill is exposed to users. The three files share one set of
-category headings, because promotion moves an entry between files within the
-same category.
+The bootstrap template is bundled as a resource of `butter-workflow-start`, so
+no internal helper skill is exposed to users. Bootstrap creates the file when it
+is absent and otherwise leaves it alone.
 
-### Capture Timing
+### What Gets Captured
 
-Capture is continuous, not a closing step. Every stage evaluates the user
-messages it receives — including the ones that arrive after the stage's main
-work is done, such as spec feedback and follow-up fix requests — and records
-what generalizes.
+The bar is anything that would help write a better plan, change, or review on
+the next task. It is deliberately wider than what a user would call a
+"preference".
 
-### Promotion
+Feedback arrives attached to an instance. Users say "this component is too
+complex, simplify it", not "I prefer simple code". The generality sits in the
+rule behind the request rather than in how the request is phrased, so the rule
+is what gets extracted and stored. Uncertainty resolves toward recording, since
+a wrong entry takes one line to delete while a missing one is invisible.
 
-A newly observed preference is written to `candidates.md`. Observing the same
-preference again promotes it to `active.md` and removes it from `candidates.md`.
-An entry in `rejected.md` blocks recording outright, and a request that
-contradicts an existing active preference is escalated to the user rather than
-applied silently.
+Four things are skipped: an equivalent entry already stored, a rule already
+stated in the project instruction files, a pure one-off with no rule behind it,
+and a message with no content such as a bare approval.
 
 Equivalence is judged by meaning rather than by exact wording, so the same rule
 phrased two different ways is treated as one entry.
 
-### Read Versus Apply
+### Capture Timing
 
-`active.md` is the only execution context. Stages read `candidates.md` and
-`rejected.md` solely to decide whether an observation is new, a promotion, or
-blocked. An unconfirmed candidate never becomes a working rule.
+Capture runs throughout the workflow. Every stage evaluates the user messages it
+receives — including the ones that arrive after the stage's main work is done,
+such as spec feedback and follow-up fix requests.
+
+A recorded preference applies from the next task onward.
+
+### Delegated Judgement
+
+The stage does not judge its own messages. Any message carrying content is
+handed verbatim to a separate capture agent, which runs alongside the work the
+user actually asked for. The stage decides only whether a message has content,
+never whether it is worth recording.
+
+The split matters because an agent in the middle of the user's actual request
+will deprioritize any judgement attached to it. Handing the judgement to an
+agent that has nothing else to do is what makes capture reliable. It also keeps
+the cost flat when one message carries dozens of separate points, and keeps the
+reasoning out of the main context.
+
+Routing does not gate capture. A message handled as a spec edit or a code fix
+still reaches the capture agent.
+
+Tools without a subagent mechanism run the same contract inline at the end of
+the response. Criteria, writing rules, and reporting are identical; only the
+place it runs differs.
+
+### Conflicts And Removal
+
+A new entry that contradicts a stored one replaces it, on the grounds that the
+user's latest instruction is their current one. The replacement is reported
+rather than applied silently. Asking instead is not an option available to a
+background agent.
+
+A user asking for an entry to be dropped removes it. Removal is not permanent: a
+later message making the same point can put it back.
 
 ### Reporting
 
-A record or a promotion is reported in one line at the end of the response that
-triggered it. Capture never asks for approval first, which keeps it out of the
-way while still letting the user correct a wrong capture immediately.
+Each record, replacement, or removal is reported in one line at the end of the
+response that triggered it. Capture never asks for approval first, which keeps
+it out of the way while still letting the user correct a wrong capture
+immediately.
 
 ## Recommended Cross-Tool Flow
 
@@ -260,4 +291,5 @@ docs/specs/{TASK-ID}/
 ```
 
 `00-META.md` is the current workflow state source of truth. Preference data is
-never written into the spec directory.
+never written into the spec directory; it lives in
+`~/.agents/preferences/preferences.md`.
