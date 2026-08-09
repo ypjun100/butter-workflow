@@ -1,8 +1,6 @@
-# Preference Candidates
+# Preferences
 
-One-time observations that may become active after repeated evidence or explicit user approval.
-
-Headings match `active.md` so a candidate can be promoted within the same category.
+Preferences captured from the user's own requests. Applied when planning, implementing, and reviewing.
 
 ## Planning
 - None yet.
