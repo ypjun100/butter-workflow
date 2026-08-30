@@ -35,8 +35,7 @@ handoff model.
 - One shared skill set (`skills/`) for agents supporting the Agent Skills
   format (`SKILL.md`) — no tool-specific command wrappers.
 - Track A/B/C routing for small changes, planned changes, and high-risk changes.
-- Parallel repository research behind every plan, and a separate validation
-  pass before a plan reaches you.
+- Parallel repository research behind every plan, and a separate validation pass before a plan reaches you.
 - Handoff spec documents under `docs/specs/{TASK-ID}/` for every track.
 - Shared user preference memory under `~/.agents/preferences/preferences.md`,
   captured automatically as you work.
@@ -106,24 +105,19 @@ All three stages also capture preferences while they run. See
 
 ## Planning
 
-For Track B and Track C, the start stage reads the repository from five angles
-at once rather than one after another:
+For Track B and Track C, the start stage launches four repository research axes together, plus an external-context axis when the task references an issue, PR, or ticket. When fewer agent slots are available, the axes are grouped across those slots and still launched in one batch.
 
 ```text
 reuse         what already does this, and who calls it
 convention    how this repository writes this kind of code
 impact        what the change touches, and what depends on it
 verification  build, test, and lint commands, and where tests live
-external      the referenced issue, PR, or ticket
+external      the referenced issue, PR, or ticket, when present
 ```
 
-The spec is written while they run, since it carries what you need rather than
-how it gets built. Nothing waits on a result it does not use. Each angle
-reports findings anchored to real locations in the repository, and a search
-that came up empty is stated rather than left silent.
+The spec is written while they run, since it carries what you need rather than how it gets built. Nothing waits on a result it does not use. Each angle anchors findings to its source — repository locations for repository research and source links or identifiers for external context — and a search that came up empty is stated rather than left silent.
 
-The finished plan then goes to an agent that did not write it, checking reuse,
-minimal change, architecture fit, and convention:
+The finished plan then goes to a read-only agent that did not write it. That agent independently inspects the repository while checking reuse, minimal change, architecture fit, and convention:
 
 ```text
 "add a date formatter"  ->  src/lib/date.ts:40 already has one
@@ -132,10 +126,7 @@ minimal change, architecture fit, and convention:
 "add a tests/ folder"   ->  tests sit beside the source in this repo
 ```
 
-A clean verdict has to say what it searched for and did not find; an empty pass
-does not count. Findings get applied and the plan is re-checked once rather
-than looped, so the gate cannot stall. Anything left unapplied is reported with
-its reason when the stage pauses for your approval.
+A clean verdict has to say what it searched for and did not find; an empty pass does not count. Findings get applied and the plan is re-checked once rather than looped, so the gate cannot stall. Anything left unapplied is reported with its reason when the stage pauses for your approval.
 
 ## Preference Capture
 
