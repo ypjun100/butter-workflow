@@ -20,6 +20,8 @@ planning depth.
 - Keep task state in the repository, not in one chat thread.
 - Use the same workflow stages in Claude Code and Codex.
 - Keep tool-specific commands thin; put reusable behavior in shared skills.
+- Dispatch independent research together rather than in sequence, so a plan's depth is not paid for in waiting.
+- Judge a finished plan with an agent that did not write it.
 - Use available Jira, GitHub, or similar MCP tools first when they exist.
 - Use `git` for repository work such as branch, status, diff, commit, and push.
 - Use `gh` only for GitHub PR work when MCP tools are unavailable.
@@ -122,6 +124,30 @@ check out the branch; the implement stage does that.
 Start writes the spec for the chosen track and then stops for user approval
 before implementation. For Track A it writes a lightweight spec (`00-META.md`
 and `01-SPEC.md`). For Track B or C it also writes the plan and task files.
+
+#### Planning Research
+
+A Track B or Track C plan rests on several readings: what already does this work and who calls it, how the repository writes this kind of code, what the change touches and what depends on it, how the result gets verified, and, when one is referenced, what the external issue, PR, or ticket says. None of those readings needs another one's result, so they go out together and the wait is the slowest of them rather than their sum. When the tool has fewer agent slots than research axes, compatible axes share the available agents and still start in one batch.
+
+Depth is why this matters more than speed does. When every reading is paid for in waiting, research gets cut short, and a plan built on shallow research proposes a new function beside one that already does the job and defines its own naming and placement next to the repository's own.
+
+The spec is written while the research runs. It carries user needs and success criteria and no implementation choices, so it has nothing to wait for.
+
+Each research agent is read-only, returns findings rather than proposals, anchors repository findings to repository locations and external findings to their source links or identifiers, and states when a search came up empty. Silence and "nothing found" are different answers.
+
+Research that surfaces risk the classification missed moves the track from B to C. The user is told, and the existing Track C confirmation gate runs before planning continues.
+
+#### Plan Validation
+
+A finished Track B or Track C plan is checked by a read-only agent that did not write it, before the plan reaches the user and before the task files are split out of it. The validator independently inspects the repository instead of assuming that the planning research found everything. The reasoning matches preference capture: an agent in the middle of producing something deprioritizes any judgement attached to it.
+
+The check covers reuse, minimal change, architecture fit, and convention, and for Track C whether every high-risk scope has a matching risk review target. Each finding names the point in the plan, the repository location that backs it, and what the plan should say instead. A verdict with no findings has to state what was searched for and not found, so an empty pass cannot stand in for a search.
+
+Findings are applied and the plan is re-checked once. One round rather than a loop, because a gate that can run indefinitely is a gate that stalls the stage. Findings still open after that round, and findings the plan author disagrees with, stay unapplied and are reported with their reason when the stage pauses.
+
+The task files are written after the plan settles, so applying a finding does not mean rewriting the split. The validation record is not written to the spec directory; it appears in the handoff summary, one line per finding, alongside the spec file list.
+
+Track A writes no plan and skips both the research fan-out and this gate.
 
 ### 2. Implement
 

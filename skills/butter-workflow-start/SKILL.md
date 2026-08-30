@@ -52,14 +52,94 @@ repository state and before writing any file.
    - Track C: Track B plus auth, security, payment, permission, shared-core, architecture, migration, or broad refactor risk.
 9. Confirm the track with the user when the classification is ambiguous or when Track C is selected. For obvious Track A/B, proceed and state the assumption.
 10. Do not create or check out any branch during start. The working branch is only recorded as the planned value in `00-META.md`; the implement stage creates and checks it out.
-11. Write the spec by track. Do not implement, commit, push, or open a PR during start for any track.
-    - Track A: create `docs/specs/{TASK-ID}/` and write only `00-META.md` and `01-SPEC.md` (lightweight spec).
-    - Track B/C: create `docs/specs/{TASK-ID}/` and write `00-META.md`, `01-SPEC.md`, `02-PLAN.md`, and one or more `03-TASK-*.md`.
-12. For Track C, add `## Risk Review Targets` to `02-PLAN.md` and self-check whether each high-risk scope has review focus.
-13. Stop in feedback mode after writing the spec for every track (A/B/C):
+11. Create `docs/specs/{TASK-ID}/`.
+12. Track B/C: dispatch the planning research fan-out now, in a single batch, and write `01-SPEC.md` while it runs. See `## Planning Research`. Track A writes `01-SPEC.md` directly and skips the fan-out.
+13. Track B/C: read the research reports before planning. Move the track from B to C when they surface risk the classification missed, tell the user when it moves, and complete the Track C confirmation from step 9 before planning continues.
+14. Write the rest of the spec by track. Do not implement, commit, push, or open a PR during start for any track.
+    - Track A: `00-META.md` and `01-SPEC.md` only (lightweight spec).
+    - Track B/C: `00-META.md` and `02-PLAN.md`, built from the research reports. The `03-TASK-*.md` files come after validation.
+15. For Track C, add `## Risk Review Targets` to `02-PLAN.md` and self-check whether each high-risk scope has review focus.
+16. Track B/C: hand `02-PLAN.md` to the plan validation agent before going further. See `## Plan Validation`. Apply what it finds, re-validate once, then write the `03-TASK-*.md` files from the settled plan. Track A skips this gate.
+17. Stop in feedback mode after writing the spec for every track (A/B/C):
     - Give the user the spec directory path.
     - Summarize what was written: list every spec file created in this run, each rendered as a clickable Markdown link to the file (for example, `[00-META.md](/absolute/path/to/docs/specs/{TASK-ID}/00-META.md)`), with a short note of what each covers. List only files actually written for the track (Track A: `00-META.md`, `01-SPEC.md`; Track B/C: the full set including every `03-TASK-*.md` written). Never list a file that was not written.
+    - Track B/C: add one line per validation finding — what was applied, and what was left unapplied and why.
     - Wait for approval before implementation.
+
+## Planning Research
+
+Track B/C only. A plan needs the repository read from several angles, and those angles do not depend on each other. Send them out together so the wait is the slowest strand rather than the sum of all of them.
+
+### Axes
+
+- `reuse` — functions, modules, and utilities that already do what this task needs, and the sites that call them.
+- `convention` — how this repository already writes this kind of code: naming, file placement, layering, error handling, logging, where tests live and what they look like.
+- `impact` — the files the change actually touches, what calls or depends on them, and which contracts could break.
+- `verification` — build, test, lint, and type-check commands, the test framework, and where the existing tests for this area live.
+- `external` — the referenced issue, PR, or ticket. Use MCP first and `gh` when MCP is unavailable.
+
+Dispatch every applicable axis in one batch. Use one agent per axis when capacity allows. If fewer subagent slots are available than applicable axes, group axes across the available agents before dispatching so every axis starts in that batch; do not wait for one agent to finish solely to reuse its slot. Drop an axis only when this task gives it nothing to find: no referenced external resource means no `external` axis.
+
+Give each agent:
+
+- The user's task context, verbatim and unsummarized.
+- Its assigned axis or axes and what each axis is looking for.
+- The project instruction file paths and `~/.agents/preferences/preferences.md`.
+
+Instruct each agent to:
+
+1. Stay read-only. Do not write files, edit the spec, or create branches or commits.
+2. Report findings under each assigned axis, not proposals. What to build is the main agent's call.
+3. Anchor every repository finding to a repository location and every external finding to its source URL or resource identifier. Mark anything it could not anchor as unconfirmed.
+4. Say so explicitly when a search came up empty. Silence is not the same answer as nothing found.
+
+Write `01-SPEC.md` while they run. It carries user needs and success criteria and no implementation choices, so it has nothing to wait for.
+
+Read the reports before writing `02-PLAN.md`. When they surface risk the track classification missed — auth, permissions, payment, shared core, migration, broad refactor — move the track from B to C, tell the user, and wait for the Track C confirmation required by workflow step 9 before continuing.
+
+When the tool has no subagent mechanism, work the axes yourself in sequence. Same axes, same read-only rule, same evidence requirement. Only the place they run changes.
+
+## Plan Validation
+
+Track B/C only. A plan drifts in the same three directions every time: it rebuilds something the repository already has, it reaches wider than the requirement asked for, and it invents conventions alongside the existing ones. Catch that before the user has to.
+
+Hand the finished `02-PLAN.md` to a separate agent. The agent that wrote the plan does not validate it.
+
+### When
+
+After `02-PLAN.md` is written, and for Track C after `## Risk Review Targets` is added. Before any `03-TASK-*.md` exists — the task split comes out of the settled plan, not the draft.
+
+### What The Validator Gets
+
+- `02-PLAN.md` and `01-SPEC.md`, in full.
+- The planning research reports, verbatim and unsummarized.
+- The project instruction file paths and `~/.agents/preferences/preferences.md`.
+
+The validator stays read-only and inspects the repository independently instead of treating the research reports as complete. It does not write files, edit the spec or plan, or create branches or commits.
+
+### What The Validator Checks
+
+- **Reuse** — anything the plan proposes to build that the repository already has. Cite the existing location for every one of them.
+- **Minimal change** — changes the requirement does not need, abstractions with no second caller, scope the user never asked for.
+- **Architecture fit** — whether module and layer boundaries, dependency direction, and placement of responsibility match how this repository is already arranged.
+- **Convention** — whether naming, file placement, error handling, and test location match the examples the `convention` research actually found, not the validator's own taste.
+- Track C also: whether every high-risk scope has a matching entry under `## Risk Review Targets`.
+
+### What The Validator Returns
+
+- A one-line verdict, then the findings.
+- Each finding: the point in the plan, the repository location that backs it, and what it should become instead.
+- A clean verdict has to earn it. State what was searched for and not found. An empty pass with nothing behind it is not a pass.
+
+### Applying It
+
+- Fix `02-PLAN.md` and send it back once. One re-validation round, not a loop.
+- Findings still open after that round stay unapplied and go to the user in the handoff summary.
+- A finding you disagree with stays unapplied too. Report it with the reason.
+- Write the `03-TASK-*.md` files once the plan settles.
+- Keep the validation record out of the spec directory. It belongs in the handoff summary, one line per finding.
+
+When the tool has no subagent mechanism, run the same checks as a separate pass over the written plan before the task files exist. Same checks, same evidence requirement, same reporting. Only the place it runs changes.
 
 ## Follow-Up Requests
 
