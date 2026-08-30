@@ -52,14 +52,67 @@ repository state and before writing any file.
    - Track C: Track B plus auth, security, payment, permission, shared-core, architecture, migration, or broad refactor risk.
 9. Confirm the track with the user when the classification is ambiguous or when Track C is selected. For obvious Track A/B, proceed and state the assumption.
 10. Do not create or check out any branch during start. The working branch is only recorded as the planned value in `00-META.md`; the implement stage creates and checks it out.
-11. Write the spec by track. Do not implement, commit, push, or open a PR during start for any track.
-    - Track A: create `docs/specs/{TASK-ID}/` and write only `00-META.md` and `01-SPEC.md` (lightweight spec).
-    - Track B/C: create `docs/specs/{TASK-ID}/` and write `00-META.md`, `01-SPEC.md`, `02-PLAN.md`, and one or more `03-TASK-*.md`.
-12. For Track C, add `## Risk Review Targets` to `02-PLAN.md` and self-check whether each high-risk scope has review focus.
-13. Stop in feedback mode after writing the spec for every track (A/B/C):
+11. Create `docs/specs/{TASK-ID}/`.
+12. Track B/C: dispatch the planning research fan-out now, in a single batch, and write `01-SPEC.md` while it runs. See `## Planning Research`. Track A writes `01-SPEC.md` directly and skips the fan-out.
+13. Track B/C: read the research reports before planning. Move the track from B to C when they surface risk the classification missed, and tell the user when it moves.
+14. Write the rest of the spec by track. Do not implement, commit, push, or open a PR during start for any track.
+    - Track A: `00-META.md` and `01-SPEC.md` only (lightweight spec).
+    - Track B/C: `00-META.md`, `02-PLAN.md` built from the research reports, and one or more `03-TASK-*.md`.
+15. For Track C, add `## Risk Review Targets` to `02-PLAN.md` and self-check whether each high-risk scope has review focus.
+16. Stop in feedback mode after writing the spec for every track (A/B/C):
     - Give the user the spec directory path.
     - Summarize what was written: list every spec file created in this run, each rendered as a clickable Markdown link to the file (for example, `[00-META.md](/absolute/path/to/docs/specs/{TASK-ID}/00-META.md)`), with a short note of what each covers. List only files actually written for the track (Track A: `00-META.md`, `01-SPEC.md`; Track B/C: the full set including every `03-TASK-*.md` written). Never list a file that was not written.
     - Wait for approval before implementation.
+
+## Planning Research
+
+Track B/C only. A plan needs the repository read from several angles, and those
+angles do not depend on each other. Send them out together so the wait is the
+slowest strand rather than the sum of all of them.
+
+### Axes
+
+- `reuse` — functions, modules, and utilities that already do what this task
+  needs, and the sites that call them.
+- `convention` — how this repository already writes this kind of code: naming,
+  file placement, layering, error handling, logging, where tests live and what
+  they look like.
+- `impact` — the files the change actually touches, what calls or depends on
+  them, and which contracts could break.
+- `verification` — build, test, lint, and type-check commands, the test
+  framework, and where the existing tests for this area live.
+- `external` — the referenced issue, PR, or ticket. Use MCP first and `gh` when
+  MCP is unavailable.
+
+Dispatch all of them at once. Drop an axis only when this task gives it nothing
+to find: no referenced external resource means no `external` agent.
+
+Give each agent:
+
+- The user's task context, verbatim and unsummarized.
+- Its axis and what that axis is looking for.
+- The project instruction file paths and `~/.agents/preferences/preferences.md`.
+
+Instruct each agent to:
+
+1. Stay read-only. Do not write files, edit the spec, or create branches or
+   commits.
+2. Report findings, not proposals. What to build is the main agent's call.
+3. Anchor every item to a repository location. Mark anything it could not
+   anchor as unconfirmed.
+4. Say so explicitly when a search came up empty. Silence is not the same
+   answer as nothing found.
+
+Write `01-SPEC.md` while they run. It carries user needs and success criteria
+and no implementation choices, so it has nothing to wait for.
+
+Read the reports before writing `02-PLAN.md`. When they surface risk the track
+classification missed — auth, permissions, payment, shared core, migration,
+broad refactor — move the track from B to C and tell the user.
+
+When the tool has no subagent mechanism, work the axes yourself in sequence.
+Same axes, same read-only rule, same evidence requirement. Only the place they
+run changes.
 
 ## Follow-Up Requests
 
