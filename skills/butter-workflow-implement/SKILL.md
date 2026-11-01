@@ -2,7 +2,7 @@
 name: butter-workflow-implement
 description: |-
   Trigger: docs/specs/{TASK-ID}/00-META.md exists with Status planned, and the user approves that spec or asks for it to be built ("implement this", "build the approved plan", "continue the implementation"). Both conditions are required. Reads workflow state, applies the approved track scope, runs verification, commits task-sized changes, pushes, and creates or updates a PR.
-  Skip: no docs/specs/{TASK-ID}/00-META.md exists — the user never started a Butter Workflow, so do the requested work directly rather than pulling in this stage. Also skip for spec-file edits and single follow-up fixes inside an active workflow — apply those directly. Also skip once a PR already exists and is awaiting review — use `butter-workflow-code-review` instead.
+  Skip: no docs/specs/{TASK-ID}/00-META.md exists — the user never started a Butter Workflow, so do the requested work directly rather than pulling in this stage. Also skip for spec-file edits and single follow-up fixes inside an active workflow — apply those directly. Also skip once a PR already exists and is awaiting review — use `butter-workflow-code-review` instead. Also skip while that 00-META.md is still `drafting` — its design dialogue is unfinished; tell the user to continue it by naming `butter-workflow-start`, and do not build it directly.
 ---
 
 # Butter Workflow Implement
@@ -17,16 +17,21 @@ Implement the approved spec while preserving the docs as the handoff surface.
    - Prefer the task id or path supplied by the user.
    - Otherwise inspect `docs/specs/*/00-META.md` and choose the one whose status is `planned` or whose working branch matches the current branch.
    - Ask the user only when multiple plausible active specs exist.
+   - When the chosen `00-META.md` is `drafting`, stop: its design dialogue is unfinished. Tell the user to continue it by naming `butter-workflow-start`.
 4. Read the spec for the task's track:
-   - Always: `00-META.md` and `01-SPEC.md`.
+   - Always: `00-META.md`, including `## Decisions`, and `01-SPEC.md`.
    - Track B/C also: `02-PLAN.md` and relevant `03-TASK-*.md`.
    - Track C also: `02-PLAN.md` `Risk Review Targets`.
    - Track A implements from `00-META.md` and `01-SPEC.md` only.
 5. Prepare the working branch from `00-META.md` before implementing. Ask first when the working tree is dirty or any branch create/switch operation would be risky:
    - If the `Working branch` does not exist, create it from the `Base branch` with `git switch -c <working-branch> <base-branch>`.
    - If it already exists, switch to it.
-6. Implement only the current task scope. Do not expand beyond the spec without updating it or asking the user when scope/risk changes.
+6. Implement only the current task scope, using `## Development Methods`. Do not expand beyond the spec without updating it or asking the user when scope/risk changes.
+   - A decision the spec, plan, and task leave open goes to the user when two or more options are viable, their tradeoffs pull against each other, and the pick depends on the user's know-how, history, or direction. Stop and give that fork its own message: what each option means here, its tradeoffs, the combination when options can combine, and your recommendation with its reason.
+   - When you are stuck, ask instead of guessing. Decide clear-cut calls yourself.
+   - Append every decision made while implementing to `00-META.md` `## Decisions`, marking the ones you made without asking.
 7. Run targeted verification after each meaningful task:
+   - Before calling a task done, committing, or opening the PR, run the command that proves the claim and read its output and exit code. Report what you could not verify as unverified.
    - Use repo-native commands from package scripts, build files, test config, or existing documentation.
    - Prefer focused tests first, then broader checks if shared behavior changed.
 8. Commit task-sized changes:
@@ -43,6 +48,14 @@ Implement the approved spec while preserving the docs as the handoff surface.
     - Fill `PR URL` when known.
     - Commit the metadata update if it is part of the implementation branch.
 11. Recommend the `butter-workflow-code-review` skill. It is the last stage of the workflow.
+
+## Development Methods
+
+Do not go straight to code. For each task, read the code it touches and pick the methods that fit; the plan does not assign them.
+
+- **Test first (TDD)** — when the repository has a test setup and the task changes behavior, write a failing test, confirm it fails for the expected reason, then write the smallest code that makes it pass.
+- **Only what is needed (YAGNI)** — build what the task requires. No abstraction without a second caller, no scope the user did not ask for.
+- **Root cause before fixes** — when something fails, read the error, reproduce it, check recent changes, and test one hypothesis at a time before changing code. When fixes keep failing, stop guessing and ask, with what you found.
 
 ## Follow-Up Requests
 
