@@ -36,7 +36,9 @@ handoff model.
   format (`SKILL.md`) — no tool-specific command wrappers.
 - Track A/B/C routing for small changes, planned changes, and high-risk changes.
 - Parallel repository research behind every plan, and a separate validation pass before a plan reaches you.
-- Handoff spec documents under `docs/specs/{TASK-ID}/` for every track.
+- A design dialogue at start that puts the decisions only you can make to you, one question at a time, instead of guessing.
+- Development methods picked per task during implementation — test first, only what is needed, root cause before fixes — with verification before anything is called done.
+- Short handoff spec documents under `docs/specs/{TASK-ID}/` for every track, with the decision history kept in `00-META.md`.
 - Shared user preference memory under `~/.agents/preferences/preferences.md`,
   captured automatically as you work.
 
@@ -90,16 +92,16 @@ does.
 
 | Skill | Role |
 |---|---|
-| `butter-workflow-start` | Starts a workflow when explicitly named, from the context the user provides: classifies track type, plans the working branch name, researches the repository in parallel, writes spec docs for every track, validates the plan with a separate agent, and summarizes the written files as hyperlinks before pausing for approval. |
-| `butter-workflow-implement` | Creates or switches to the working branch, implements the approved spec for any track, verifies changes, commits, pushes, and creates a PR. |
-| `butter-workflow-code-review` | Reviews a PR or branch diff with issue, plan, task, and risk-target context, then closes out the workflow. |
+| `butter-workflow-start` | Opens or resumes a draft, clarifies the task, writes and validates the plan, then waits for approval. |
+| `butter-workflow-implement` | Blocks unfinished drafts, builds the approved plan, verifies changes, commits, pushes, and opens a PR. |
+| `butter-workflow-code-review` | Reviews a PR or branch diff with issue, plan, task, decision, and risk-target context, verifies review feedback against the code before applying it, then closes out the workflow. |
 
 All three stages also capture preferences while they run. See
 [Preference Capture](#preference-capture).
 
 ## Track Model
 
-- Track A: small low-risk changes; writes a lightweight spec (`00-META.md` + `01-SPEC.md`) and pauses for approval before implementing.
+- Track A: small low-risk changes; plays its understanding back once, writes a lightweight spec (`00-META.md` + `01-SPEC.md`), and pauses for approval before implementing.
 - Track B: planned feature or fix within existing architecture; creates the full `docs/specs/{TASK-ID}/` set.
 - Track C: high-risk Track B work involving auth, security, payment, permissions, shared core, architecture, migration, or broad refactor risk; adds `Risk Review Targets`.
 
@@ -115,9 +117,9 @@ verification  build, test, and lint commands, and where tests live
 external      the referenced issue, PR, or ticket, when present
 ```
 
-The spec is written while they run, since it carries what you need rather than how it gets built. Nothing waits on a result it does not use. Each angle anchors findings to its source — repository locations for repository research and source links or identifiers for external context — and a search that came up empty is stated rather than left silent.
+The design dialogue runs while they do: you are asked about what only you can decide, one question at a time, and the spec fills in as each part is confirmed. Later questions build on what the research found. Each angle anchors findings to its source — repository locations for repository research and source links or identifiers for external context — and a search that came up empty is stated rather than left silent.
 
-The finished plan then goes to a read-only agent that did not write it. That agent independently inspects the repository while checking reuse, minimal change, architecture fit, and convention:
+The finished plan then goes to a read-only agent that did not write it. That agent independently inspects the repository while checking reuse, minimal change, architecture fit, convention, and document format, and it returns the decisions only you can make as questions:
 
 ```text
 "add a date formatter"  ->  src/lib/date.ts:40 already has one
@@ -126,7 +128,7 @@ The finished plan then goes to a read-only agent that did not write it. That age
 "add a tests/ folder"   ->  tests sit beside the source in this repo
 ```
 
-A clean verdict has to say what it searched for and did not find; an empty pass does not count. Findings get applied and the plan is re-checked once rather than looped, so the gate cannot stall. Anything left unapplied is reported with its reason when the stage pauses for your approval.
+A clean verdict has to say what it searched for and did not find; an empty pass does not count. Its questions come to you before the plan is re-checked. Findings get applied and the plan is re-checked once rather than looped, so the gate cannot stall. Anything left unapplied is reported with its reason when the stage pauses for your approval.
 
 ## Preference Capture
 
@@ -190,7 +192,4 @@ docs/specs/{TASK-ID}/
   03-TASK-*.md
 ```
 
-`00-META.md` is the current workflow state source of truth. Its `Status` moves
-`planned` → `implemented` → `reviewed`, ending at `reviewed`. Preference data
-never lives in the spec directory; it lives in
-`~/.agents/preferences/preferences.md`.
+`00-META.md` is the current workflow state source of truth and keeps the decision history. Its `Status` moves `drafting` → `planned` → `implemented` → `reviewed`, ending at `reviewed`; it stays `drafting` while the design dialogue is open. You review `00-META.md`, `01-SPEC.md`, and `02-PLAN.md`; the `03-TASK-*.md` files are written for the implementing agent. Preference data never lives in the spec directory; it lives in `~/.agents/preferences/preferences.md`.

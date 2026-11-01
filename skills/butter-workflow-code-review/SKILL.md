@@ -17,26 +17,28 @@ Review the implemented diff with context from the issue and workflow docs.
    - Prefer a PR URL supplied by the user or recorded in `00-META.md`.
    - Otherwise review the current branch diff against the base branch from `00-META.md`.
 4. Collect context by track:
+   - All tracks: `00-META.md` `## Decisions`, which records what the user decided and the calls made without asking.
    - Track A: PR diff or branch diff, related issue, existing PR review comments, and `01-SPEC.md` as the requirement reference.
    - Track B: Track A context plus `02-PLAN.md` and relevant `03-TASK-*.md`.
    - Track C: Track B context plus `Risk Review Targets`.
-5. Use MCP for PR and review comment access when available. If unavailable, use `gh` only for PR lookup, PR diff, and review comments when installed/authenticated.
+5. Use MCP for PR and review comment access when available. If unavailable, use `gh` only for PR lookup, PR diff, review comments, and replies on review threads when installed/authenticated.
 6. Review in this order:
    - Requirement mismatch.
    - Bugs and behavioral regressions.
-   - Side effects outside the planned scope.
+   - Side effects outside the planned scope, including code the task did not require.
    - Architecture boundary violations.
    - Security, authentication, authorization, privacy, and data integrity issues.
-   - Missing tests or weak verification.
+   - Missing tests or weak verification: behavior changes without tests when the repository has a test setup, and completion claims without verification that was actually run.
    - Conflicts with `preferences.md`.
 7. For Track C, explicitly inspect every `Risk Review Targets` item and report whether the implementation satisfies its `review-focus`.
-8. Classify findings:
+8. Verify each finding against the code before acting on it, including review comments from people or tools. Then classify it:
    - Immediate fixes: clear bug or small stability/test fix, low scope, no plan/preference conflict.
-   - User decision: design change, scope expansion, plan conflict, preference conflict, or trade-off with no obvious winner.
+   - User decision: design change, scope expansion, plan conflict, preference conflict, trade-off with no obvious winner, or feedback too unclear to act on — ask before applying it.
+   - Weakly grounded feedback: show the user the code-backed reason to decline it; once they decide, reply on its thread.
 9. Apply immediate fixes when safe, run targeted verification, commit, and push.
-10. Present user-decision items with the feedback, benefit, downside, recommendation, and why user input is needed.
+10. Present user-decision items with the feedback, benefit, downside, the combination when options can combine, recommendation, and why user input is needed.
 11. Update PR body or comment with review/fix summary when a PR is available.
-12. Update `00-META.md` to `Status: reviewed` only after review and required safe fixes are complete. `reviewed` is the terminal state: the workflow ends here, and preferences were already captured along the way by `## Preference Capture`.
+12. Append the decisions made during the review to `00-META.md` `## Decisions`, marking the ones you made without asking. Update `00-META.md` to `Status: reviewed` only after review and required safe fixes are complete. `reviewed` is the terminal state: the workflow ends here, and preferences were already captured along the way by `## Preference Capture`.
 
 ## Follow-Up Requests
 

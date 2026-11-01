@@ -35,127 +35,62 @@ repository state and before writing any file.
    - Use `preferences.md` when it exists.
    - Otherwise create it from this skill's `references/preferences.template.md`.
 3. Read `~/.agents/preferences/preferences.md` when it exists and apply it while writing the spec and plan. It is the only preference file.
-4. Understand the task from the provided context. Use it as-is and do not ask for any particular input form. When the context references retrievable external resources, enrich your understanding with available Jira/GitHub MCP tools, or with `gh` for GitHub when MCP is unavailable.
+4. Understand the task from the provided context. When the context references retrievable external resources, enrich your understanding with available Jira/GitHub MCP tools, or with `gh` for GitHub when MCP is unavailable.
 5. Collect project context:
    - Current branch and clean/dirty working tree.
    - Existing branch naming convention with `git branch --list`.
    - Build/test/package files relevant to the repository.
 6. Set base branch to the branch active at workflow start.
-7. Plan the working branch name (do not create it):
+7. Plan the working branch name; the implement stage creates and checks it out:
    - Classify work type as `feature`, `fix`, `refactor`, or `docs`.
    - Derive task id from the issue key, GitHub issue number as `gh-N`, or a short slug when no id exists.
    - Follow existing branch prefix conventions when clear; otherwise use `feature/<task-id>-<slug>`, `fix/<task-id>-<slug>`, `refactor/<task-id>-<slug>`, or `docs/<task-id>-<slug>`.
-   - Record the base branch and this working branch name in `00-META.md`. The implement stage creates and checks out the branch.
 8. Classify Track Type:
    - Track A: small, low-risk, few files, no API/DB/auth/security/shared-module impact, rollback is easy.
    - Track B: needs planning docs, may touch multiple files, fits existing architecture, requires tests or type checks.
    - Track C: Track B plus auth, security, payment, permission, shared-core, architecture, migration, or broad refactor risk.
-9. Confirm the track with the user when the classification is ambiguous or when Track C is selected. For obvious Track A/B, proceed and state the assumption.
-10. Do not create or check out any branch during start. The working branch is only recorded as the planned value in `00-META.md`; the implement stage creates and checks it out.
-11. Create `docs/specs/{TASK-ID}/`.
-12. Track B/C: dispatch the planning research fan-out now, in a single batch, and write `01-SPEC.md` while it runs. See `## Planning Research`. Track A writes `01-SPEC.md` directly and skips the fan-out.
-13. Track B/C: read the research reports before planning. Move the track from B to C when they surface risk the classification missed, tell the user when it moves, and complete the Track C confirmation from step 9 before planning continues.
-14. Write the rest of the spec by track. Do not implement, commit, push, or open a PR during start for any track.
-    - Track A: `00-META.md` and `01-SPEC.md` only (lightweight spec).
-    - Track B/C: `00-META.md` and `02-PLAN.md`, built from the research reports. The `03-TASK-*.md` files come after validation.
-15. For Track C, add `## Risk Review Targets` to `02-PLAN.md` and self-check whether each high-risk scope has review focus.
-16. Track B/C: hand `02-PLAN.md` to the plan validation agent before going further. See `## Plan Validation`. Apply what it finds, re-validate once, then write the `03-TASK-*.md` files from the settled plan. Track A skips this gate.
-17. Stop in feedback mode after writing the spec for every track (A/B/C):
+9. Open the spec before asking anything:
+   - Resume a `drafting` spec when the user points at it or asks to continue, or when the task id above matches a `docs/specs/{TASK-ID}/` whose `00-META.md` is `drafting`. Keep its recorded track and branch fields; pick the dialogue up from its `## Decisions` and `## Open Questions`. Ask only when it is unclear which spec is meant.
+   - Otherwise create `docs/specs/{TASK-ID}/` and write `00-META.md` from this skill's `references/spec-templates.md` with `Status: drafting`, the base branch, and the planned working branch.
+10. Confirm the track with the user when the classification is ambiguous or when Track C is selected, unless `## Decisions` already records that confirmation. For obvious Track A/B, proceed and state the assumption.
+11. Hold the design dialogue (`## Design Dialogue`) and fill in `01-SPEC.md` as each part is confirmed. Track B/C first reads this skill's `references/planning-research.md` and dispatches the research fan-out it describes, in a single batch, so the dialogue runs while it does. Track A skips the fan-out.
+12. Track B/C: read the research reports before planning. Move the track from B to C when they surface risk the classification missed, tell the user when it moves, and confirm Track C with them before planning continues.
+13. Track B/C: write `02-PLAN.md` from the research reports and the dialogue, using this skill's `references/spec-templates.md`. The `03-TASK-*.md` files come after validation. Track A writes only `00-META.md` and `01-SPEC.md`. Do not implement or open a PR during start.
+14. For Track C, add `## Risk Review Targets` to `02-PLAN.md` and self-check whether each high-risk scope has review focus.
+15. Track B/C: read this skill's `references/plan-validation.md` and hand `02-PLAN.md` to a validation agent as it describes before going further. Apply what it finds, re-validate once, then write the `03-TASK-*.md` files from the settled plan and check that none of them repeats `02-PLAN.md`. Track A skips this gate.
+16. Request approval and stop, for every track. First remove `## Open Questions` from `00-META.md` and set `Status: planned`.
     - Give the user the spec directory path.
-    - Summarize what was written: list every spec file created in this run, each rendered as a clickable Markdown link to the file (for example, `[00-META.md](/absolute/path/to/docs/specs/{TASK-ID}/00-META.md)`), with a short note of what each covers. List only files actually written for the track (Track A: `00-META.md`, `01-SPEC.md`; Track B/C: the full set including every `03-TASK-*.md` written). Never list a file that was not written.
+    - List every spec file written in this run as a clickable Markdown link (for example, `[00-META.md](/absolute/path/to/docs/specs/{TASK-ID}/00-META.md)`) with a short note of what it covers. Put the files the user reviews (`00-META.md`, `01-SPEC.md`, and on Track B/C `02-PLAN.md`) apart from the `03-TASK-*.md` files written for the implementing agent. Never list a file that was not written.
+    - Point the user to the calls you made without asking; they are marked in `## Decisions`.
     - Track B/C: add one line per validation finding — what was applied, and what was left unapplied and why.
     - Wait for approval before implementation.
 
-## Planning Research
+## Design Dialogue
 
-Track B/C only. A plan needs the repository read from several angles, and those angles do not depend on each other. Send them out together so the wait is the slowest strand rather than the sum of all of them.
+Ask before deciding. The user holds what the repository cannot show — know-how, the project's history, where it is heading — and a plan built on guesses about those comes back as rework.
 
-### Axes
-
-- `reuse` — functions, modules, and utilities that already do what this task needs, and the sites that call them.
-- `convention` — how this repository already writes this kind of code: naming, file placement, layering, error handling, logging, where tests live and what they look like.
-- `impact` — the files the change actually touches, what calls or depends on them, and which contracts could break.
-- `verification` — build, test, lint, and type-check commands, the test framework, and where the existing tests for this area live.
-- `external` — the referenced issue, PR, or ticket. Use MCP first and `gh` when MCP is unavailable.
-
-Dispatch every applicable axis in one batch. Use one agent per axis when capacity allows. If fewer subagent slots are available than applicable axes, group axes across the available agents before dispatching so every axis starts in that batch; do not wait for one agent to finish solely to reuse its slot. Drop an axis only when this task gives it nothing to find: no referenced external resource means no `external` axis.
-
-Give each agent:
-
-- The user's task context, verbatim and unsummarized.
-- Its assigned axis or axes and what each axis is looking for.
-- The project instruction file paths and `~/.agents/preferences/preferences.md`.
-
-Instruct each agent to:
-
-1. Stay read-only. Do not write files, edit the spec, or create branches or commits.
-2. Report findings under each assigned axis, not proposals. What to build is the main agent's call.
-3. Anchor every repository finding to a repository location and every external finding to its source URL or resource identifier. Mark anything it could not anchor as unconfirmed.
-4. Say so explicitly when a search came up empty. Silence is not the same answer as nothing found.
-
-Write `01-SPEC.md` while they run. It carries user needs and success criteria and no implementation choices, so it has nothing to wait for.
-
-Read the reports before writing `02-PLAN.md`. When they surface risk the track classification missed — auth, permissions, payment, shared core, migration, broad refactor — move the track from B to C, tell the user, and wait for the Track C confirmation required by workflow step 9 before continuing.
-
-When the tool has no subagent mechanism, work the axes yourself in sequence. Same axes, same read-only rule, same evidence requirement. Only the place they run changes.
-
-## Plan Validation
-
-Track B/C only. A plan drifts in the same three directions every time: it rebuilds something the repository already has, it reaches wider than the requirement asked for, and it invents conventions alongside the existing ones. Catch that before the user has to.
-
-Hand the finished `02-PLAN.md` to a separate agent. The agent that wrote the plan does not validate it.
-
-### When
-
-After `02-PLAN.md` is written, and for Track C after `## Risk Review Targets` is added. Before any `03-TASK-*.md` exists — the task split comes out of the settled plan, not the draft.
-
-### What The Validator Gets
-
-- `02-PLAN.md` and `01-SPEC.md`, in full.
-- The planning research reports, verbatim and unsummarized.
-- The project instruction file paths and `~/.agents/preferences/preferences.md`.
-
-The validator stays read-only and inspects the repository independently instead of treating the research reports as complete. It does not write files, edit the spec or plan, or create branches or commits.
-
-### What The Validator Checks
-
-- **Reuse** — anything the plan proposes to build that the repository already has. Cite the existing location for every one of them.
-- **Minimal change** — changes the requirement does not need, abstractions with no second caller, scope the user never asked for.
-- **Architecture fit** — whether module and layer boundaries, dependency direction, and placement of responsibility match how this repository is already arranged.
-- **Convention** — whether naming, file placement, error handling, and test location match the examples the `convention` research actually found, not the validator's own taste.
-- Track C also: whether every high-risk scope has a matching entry under `## Risk Review Targets`.
-
-### What The Validator Returns
-
-- A one-line verdict, then the findings.
-- Each finding: the point in the plan, the repository location that backs it, and what it should become instead.
-- A clean verdict has to earn it. State what was searched for and not found. An empty pass with nothing behind it is not a pass.
-
-### Applying It
-
-- Fix `02-PLAN.md` and send it back once. One re-validation round, not a loop.
-- Findings still open after that round stay unapplied and go to the user in the handoff summary.
-- A finding you disagree with stays unapplied too. Report it with the reason.
-- Write the `03-TASK-*.md` files once the plan settles.
-- Keep the validation record out of the spec directory. It belongs in the handoff summary, one line per finding.
-
-When the tool has no subagent mechanism, run the same checks as a separate pass over the written plan before the task files exist. Same checks, same evidence requirement, same reporting. Only the place it runs changes.
+- Read before asking: the request, the instruction files, and the code and documents involved. Never ask what they already answer. On Track B/C, later questions build on the research reports.
+- Open by playing the request back in your own words with what you found that bears on it — a constraint, a conflict, a cheaper path — and end with one question.
+- Ask one question per message and say what its answer changes. Play goals, non-goals, and success criteria back part by part for confirmation.
+- When a point settles, name what is still open, or say nothing is. A reply about something that arrived mid-dialogue, such as a research report, ends by pointing back to the pending question.
+- A decision goes to the user when two or more options are viable, their tradeoffs pull against each other, and the pick depends on the user's know-how, history, or direction. Give that fork its own message: what each option means here, its tradeoffs, the combination when options can combine, and your recommendation with its reason.
+- Decide the rest yourself: what the repository, the documents, or `preferences.md` answers, or where one option is plainly better.
+- Record settled points in `00-META.md` under `## Decisions`, marking your own calls, and pending questions under `## Open Questions`. Move a question to Decisions once it is answered or deferred.
+- Ask in a plain message. A structured question feature is fine to use, but nothing here depends on one.
+- When an answer goes to the preference capture agent, pass along the question it answers. If a captured entry comes from a question still open, say so beside its report line.
+- The dialogue ends when no fork the user must decide is left. If the user asks to stop the questions, decide the rest and record each as your own call.
+- Track A: play your understanding back once, get it confirmed, and write `01-SPEC.md`.
+- If another skill offers its own design or brainstorming process alongside this stage, follow this section and keep the output in `docs/specs/{TASK-ID}/`.
 
 ## Follow-Up Requests
 
-This stage stays paused once the spec is written. An active workflow does not
-make every later message a stage transition. Route the next one:
+Once `Status` is `planned`, this stage stays paused. While it is still `drafting`, a reply is part of the design dialogue; handle it under `## Design Dialogue`. An active workflow does not make every later message a stage transition. Route the next one:
 
-- Spec change ("fix X in the spec", "add Y to the plan") — edit the named spec
-  file, restate what changed, and stay paused. Do not re-run this stage and do
-  not start implementing.
-- Approval to build ("looks good, start implementing") — hand off to
-  `butter-workflow-implement`.
-- Anything else — an ordinary request; carry it out directly. This stage runs
-  again only when the user names it again.
+- Spec change ("fix X in the spec", "add Y to the plan") — edit the named spec file, restate what changed, and stay paused. Do not re-run this stage and do not start implementing.
+- Approval to build ("looks good, start implementing") — hand off to `butter-workflow-implement`.
+- Anything else — an ordinary request; carry it out directly. This stage runs again only when the user names it again.
 
-Routing is independent of `## Preference Capture`. Whichever branch a message
-takes, it still goes to a capture agent.
+Routing is independent of `## Preference Capture`. Whichever branch a message takes, it still goes to a capture agent.
 
 ## Preference Capture
 
@@ -266,11 +201,13 @@ work as well.
 
 ## Document Rules
 
-- `00-META.md` is the workflow state source of truth for every track.
-- Track A writes only `00-META.md` and `01-SPEC.md`. `02-PLAN.md` and `03-TASK-*.md` are Track B/C only.
-- `01-SPEC.md` describes what users need and success criteria. Do not include function names, file names, or implementation choices.
-- `02-PLAN.md` describes architecture boundaries, module responsibilities, call flow, data/API shape, test strategy, constraints, and task split.
-- `03-TASK-*.md` files must be implementable units and should align with commit-sized changes.
+- `00-META.md` is the workflow state source of truth for every track. `Status` moves `drafting` → `planned` → `implemented` → `reviewed`; `reviewed` is terminal, and there is no separate finish stage.
+- The user reviews `00-META.md`, `01-SPEC.md`, and `02-PLAN.md`, so keep them short. `03-TASK-*.md` files are written for the implementing agent.
+- Decision history lives only in `00-META.md` `## Decisions`, one line per decision. Mark the calls you made without asking, in the document's language (for example `(agent call)`). The other files state decisions, not how they were reached or what was rejected.
+- `01-SPEC.md`: goal, requirements, success criteria, and out of scope. No function names, file names, or implementation choices.
+- `02-PLAN.md` (Track B/C): implementation direction, constraints, verification, one line per task, and `## Risk Review Targets` on Track C.
+- `03-TASK-*.md` (Track B/C): one commit-sized task each, with its target, change, and done criteria. No procedure and no assigned development method; the implementing agent chooses those.
+- `02-PLAN.md` and the `03-TASK-*.md` files do not repeat each other.
 - Preference data belongs in `~/.agents/preferences/preferences.md`, never in the spec directory. See `## Preference Capture`.
 - Keep verification logs out of files. Summarize verification in the PR body or final response.
 
@@ -279,20 +216,3 @@ work as well.
 - Use `git` only for read-only checks (status, diff, branch list) during start. Do not create branches, commit, or push.
 - Use `gh` only for GitHub PR creation, PR lookup, and review comment lookup when no MCP tool is available and `gh` is installed/authenticated.
 - Do not modify issue bodies or comments unless the user approves.
-
-## File Templates
-
-`00-META.md` (all tracks; set `Track Type` to A, B, or C):
-
-```markdown
-# Meta
-
-- Track Type: A
-- Base branch:
-- Working branch:
-- PR URL:
-- Status: planned
-```
-
-`Status` moves `planned` → `implemented` → `reviewed`. `reviewed` is the
-terminal state; there is no separate finish stage.

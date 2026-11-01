@@ -22,6 +22,9 @@ planning depth.
 - Keep tool-specific commands thin; put reusable behavior in shared skills.
 - Dispatch independent research together rather than in sequence, so a plan's depth is not paid for in waiting.
 - Judge a finished plan with an agent that did not write it.
+- Put decisions that depend on the user's know-how, history, or direction to the user; decide what the repository already answers.
+- Pick development methods per task — test first, only what is needed, root cause before fixes — rather than going straight to code.
+- Keep documents a person reviews apart from documents an agent reads, and keep the decision history in one place.
 - Use available Jira, GitHub, or similar MCP tools first when they exist.
 - Use `git` for repository work such as branch, status, diff, commit, and push.
 - Use `gh` only for GitHub PR work when MCP tools are unavailable.
@@ -93,10 +96,7 @@ Use Track C when the work touches:
 
 The three stages are not entered the same way.
 
-Implement and code review are entered from repository state that proves a
-workflow is already running: a spec directory exists, `00-META.md` carries a
-status, a PR is open. That state is checkable, so these stages can be inferred
-from plain language.
+Implement and code review are entered from repository state that proves a workflow is already running: a spec directory exists, `00-META.md` carries a status of `planned` or later, a PR is open. That state is checkable, so these stages can be inferred from plain language. A `drafting` spec still belongs to start: its design dialogue is open, so the later stages send the user back to start.
 
 Start has no such state. Before it runs, nothing in the repository says a
 workflow is beginning, so the only available signal is phrasing — and "start
@@ -125,13 +125,21 @@ Start writes the spec for the chosen track and then stops for user approval
 before implementation. For Track A it writes a lightweight spec (`00-META.md`
 and `01-SPEC.md`). For Track B or C it also writes the plan and task files.
 
+#### Design Dialogue
+
+Start asks before it decides. The user holds what the repository cannot show — know-how, the project's history, where it is heading — and a plan built on guesses about those comes back as rework. Start reads the request and the code first, so it never asks what they already answer, then holds a dialogue: one question per message, each saying what its answer changes, with goals, non-goals, and success criteria played back part by part for confirmation.
+
+A decision goes to the user when the options are viable, their tradeoffs pull against each other, and the pick depends on the user's judgement. That fork gets a message of its own with each option's tradeoffs, any combination of them, and a recommendation. Whatever the repository, the documents, or the preferences already settle is decided by the agent and recorded as its own call.
+
+The spec directory exists from the start of the dialogue. `00-META.md` carries `Status: drafting`, collects decisions as they settle and questions still open, and moves to `planned` when approval is requested; a later session resumes a drafting spec from there. Track A plays its understanding back once and writes its spec.
+
 #### Planning Research
 
 A Track B or Track C plan rests on several readings: what already does this work and who calls it, how the repository writes this kind of code, what the change touches and what depends on it, how the result gets verified, and, when one is referenced, what the external issue, PR, or ticket says. None of those readings needs another one's result, so they go out together and the wait is the slowest of them rather than their sum. When the tool has fewer agent slots than research axes, compatible axes share the available agents and still start in one batch.
 
 Depth is why this matters more than speed does. When every reading is paid for in waiting, research gets cut short, and a plan built on shallow research proposes a new function beside one that already does the job and defines its own naming and placement next to the repository's own.
 
-The spec is written while the research runs. It carries user needs and success criteria and no implementation choices, so it has nothing to wait for.
+The design dialogue runs while the research does, and its later questions build on what the research found.
 
 Each research agent is read-only, returns findings rather than proposals, anchors repository findings to repository locations and external findings to their source links or identifiers, and states when a search came up empty. Silence and "nothing found" are different answers.
 
@@ -141,9 +149,9 @@ Research that surfaces risk the classification missed moves the track from B to 
 
 A finished Track B or Track C plan is checked by a read-only agent that did not write it, before the plan reaches the user and before the task files are split out of it. The validator independently inspects the repository instead of assuming that the planning research found everything. The reasoning matches preference capture: an agent in the middle of producing something deprioritizes any judgement attached to it.
 
-The check covers reuse, minimal change, architecture fit, and convention, and for Track C whether every high-risk scope has a matching risk review target. Each finding names the point in the plan, the repository location that backs it, and what the plan should say instead. A verdict with no findings has to state what was searched for and not found, so an empty pass cannot stand in for a search.
+The validator also reads `00-META.md`, so it can tell the user's decisions from the agent's own calls. The check covers reuse, minimal change, architecture fit, convention, and document format, and for Track C whether every high-risk scope has a matching risk review target. Each finding names the point in the plan, the repository location that backs it, and what the plan should say instead. A verdict with no findings has to state what was searched for and not found, so an empty pass cannot stand in for a search. The validator also returns the decisions only the user can make, as questions, and those are asked before the plan is re-checked.
 
-Findings are applied and the plan is re-checked once. One round rather than a loop, because a gate that can run indefinitely is a gate that stalls the stage. Findings still open after that round, and findings the plan author disagrees with, stay unapplied and are reported with their reason when the stage pauses.
+Findings are applied and the plan is re-checked once. One round rather than a loop, because a gate that can run indefinitely is a gate that stalls the stage. Questions raised in the re-check are asked before approval is requested, and the answers applied after it are marked as not re-checked. Findings still open after that round, and findings the plan author disagrees with, stay unapplied and are reported with their reason when the stage pauses.
 
 The task files are written after the plan settles, so applying a finding does not mean rewriting the split. The validation record is not written to the spec directory; it appears in the handoff summary, one line per finding, alongside the spec file list.
 
@@ -160,16 +168,15 @@ branch, and creates or updates the PR.
 The implementation stage should keep commits aligned with task boundaries when
 practical.
 
+Implementation does not go straight to code. For each task the agent reads the code involved and picks the methods that fit: a failing test first when the repository has a test setup and behavior changes, only what the task requires, and the root cause before any fix. Completion, commit, and PR claims rest on a verification run, not on expectation. A decision the spec leaves open goes to the user when its options pull against each other, and every decision made along the way is added to `00-META.md`. A `drafting` spec is not implemented.
+
 ### 3. Code Review
 
-The code-review stage can run in the same tool or in a different tool. It
-collects the relevant diff, issue context, plan, task documents, and Track C
-risk targets.
+The code-review stage can run in the same tool or in a different tool. It collects the relevant diff, issue context, decision history, plan, task documents, and Track C risk targets.
 
-The review focuses on correctness, regressions, missing tests, security,
-boundary mistakes, and mismatches between the plan and implementation. Feedback
-is either applied directly when low-risk or returned to the user when judgment
-is needed.
+The review focuses on correctness, regressions, missing tests, unrequested code, security, boundary mistakes, and mismatches between the plan and implementation. Feedback is either applied directly when low-risk or returned to the user when judgment is needed.
+
+Every finding, including review comments from people and tools, is checked against the code before it is acted on. Unclear feedback is asked about first. Weakly grounded feedback is shown to the user with the code-backed reason to decline it, and the reply goes on its thread once the user decides.
 
 Code review is the last stage. It sets `Status: reviewed`, which is the
 terminal state of the workflow.
@@ -184,8 +191,7 @@ The main handoff artifact is:
 docs/specs/{TASK-ID}/00-META.md
 ```
 
-It records the track, branch, PR, current status, and next expected
-stage. The rest of the spec directory records the plan and task details.
+It records the track, branch, PR, current status, and the decision history: what the user decided and the calls the agent made on its own. `Status` moves `drafting` → `planned` → `implemented` → `reviewed`. The rest of the spec directory records the spec, the plan, and the task details.
 
 Because the state is in files, a user can switch tools or sessions without
 reconstructing the task from memory.
@@ -291,8 +297,7 @@ ending.
 
 - Use available Jira or GitHub MCP tools first for issues, PRs, and review
   comments.
-- Use `gh` only for GitHub PR creation, PR lookup, or review-comment lookup
-  when MCP tools are unavailable.
+- Use `gh` only for GitHub PR creation, PR lookup, review-comment lookup, or replies on review threads when MCP tools are unavailable.
 - Use `git` for branch creation, status checks, diffs, commits, and pushes.
 - Do not modify issue bodies or comments without explicit user approval.
 
@@ -316,6 +321,4 @@ docs/specs/{TASK-ID}/
   03-TASK-*.md
 ```
 
-`00-META.md` is the current workflow state source of truth. Preference data is
-never written into the spec directory; it lives in
-`~/.agents/preferences/preferences.md`.
+`00-META.md` is the current workflow state source of truth and keeps the decision history. `00-META.md`, `01-SPEC.md`, and `02-PLAN.md` are written for the user to review and stay short; the `03-TASK-*.md` files are written for the implementing agent. Preference data is never written into the spec directory; it lives in `~/.agents/preferences/preferences.md`.
