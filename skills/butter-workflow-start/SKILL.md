@@ -35,17 +35,16 @@ repository state and before writing any file.
    - Use `preferences.md` when it exists.
    - Otherwise create it from this skill's `references/preferences.template.md`.
 3. Read `~/.agents/preferences/preferences.md` when it exists and apply it while writing the spec and plan. It is the only preference file.
-4. Understand the task from the provided context. Take it in whatever form the user gives it; do not require a particular input format. When the context references retrievable external resources, enrich your understanding with available Jira/GitHub MCP tools, or with `gh` for GitHub when MCP is unavailable.
+4. Understand the task from the provided context. When the context references retrievable external resources, enrich your understanding with available Jira/GitHub MCP tools, or with `gh` for GitHub when MCP is unavailable.
 5. Collect project context:
    - Current branch and clean/dirty working tree.
    - Existing branch naming convention with `git branch --list`.
    - Build/test/package files relevant to the repository.
 6. Set base branch to the branch active at workflow start.
-7. Plan the working branch name (do not create it):
+7. Plan the working branch name; the implement stage creates and checks it out:
    - Classify work type as `feature`, `fix`, `refactor`, or `docs`.
    - Derive task id from the issue key, GitHub issue number as `gh-N`, or a short slug when no id exists.
    - Follow existing branch prefix conventions when clear; otherwise use `feature/<task-id>-<slug>`, `fix/<task-id>-<slug>`, `refactor/<task-id>-<slug>`, or `docs/<task-id>-<slug>`.
-   - The implement stage creates and checks out the branch.
 8. Classify Track Type:
    - Track A: small, low-risk, few files, no API/DB/auth/security/shared-module impact, rollback is easy.
    - Track B: needs planning docs, may touch multiple files, fits existing architecture, requires tests or type checks.
@@ -58,10 +57,11 @@ repository state and before writing any file.
 12. Track B/C: read the research reports before planning. Move the track from B to C when they surface risk the classification missed, tell the user when it moves, and confirm Track C with them before planning continues.
 13. Track B/C: write `02-PLAN.md` from the research reports and the dialogue, using this skill's `references/spec-templates.md`. The `03-TASK-*.md` files come after validation. Track A writes only `00-META.md` and `01-SPEC.md`. Do not implement or open a PR during start.
 14. For Track C, add `## Risk Review Targets` to `02-PLAN.md` and self-check whether each high-risk scope has review focus.
-15. Track B/C: read this skill's `references/plan-validation.md` and hand `02-PLAN.md` to a validation agent as it describes before going further. Apply what it finds, re-validate once, then write the `03-TASK-*.md` files from the settled plan. Track A skips this gate.
+15. Track B/C: read this skill's `references/plan-validation.md` and hand `02-PLAN.md` to a validation agent as it describes before going further. Apply what it finds, re-validate once, then write the `03-TASK-*.md` files from the settled plan and check that none of them repeats `02-PLAN.md`. Track A skips this gate.
 16. Request approval and stop, for every track. First remove `## Open Questions` from `00-META.md` and set `Status: planned`.
     - Give the user the spec directory path.
-    - Summarize what was written: list every spec file created in this run, each rendered as a clickable Markdown link to the file (for example, `[00-META.md](/absolute/path/to/docs/specs/{TASK-ID}/00-META.md)`), with a short note of what each covers. List only files actually written for the track (Track A: `00-META.md`, `01-SPEC.md`; Track B/C: the full set including every `03-TASK-*.md` written). Never list a file that was not written.
+    - List every spec file written in this run as a clickable Markdown link (for example, `[00-META.md](/absolute/path/to/docs/specs/{TASK-ID}/00-META.md)`) with a short note of what it covers. Put the files the user reviews (`00-META.md`, `01-SPEC.md`, and on Track B/C `02-PLAN.md`) apart from the `03-TASK-*.md` files written for the implementing agent. Never list a file that was not written.
+    - Point the user to the calls you made without asking; they are marked in `## Decisions`.
     - Track B/C: add one line per validation finding — what was applied, and what was left unapplied and why.
     - Wait for approval before implementation.
 
@@ -201,11 +201,13 @@ work as well.
 
 ## Document Rules
 
-- `00-META.md` is the workflow state source of truth for every track.
-- Track A writes only `00-META.md` and `01-SPEC.md`. `02-PLAN.md` and `03-TASK-*.md` are Track B/C only.
-- `01-SPEC.md` describes what users need and success criteria. Do not include function names, file names, or implementation choices.
-- `02-PLAN.md` describes architecture boundaries, module responsibilities, call flow, data/API shape, test strategy, constraints, and task split.
-- `03-TASK-*.md` files must be implementable units and should align with commit-sized changes.
+- `00-META.md` is the workflow state source of truth for every track. `Status` moves `drafting` → `planned` → `implemented` → `reviewed`; `reviewed` is terminal, and there is no separate finish stage.
+- The user reviews `00-META.md`, `01-SPEC.md`, and `02-PLAN.md`, so keep them short. `03-TASK-*.md` files are written for the implementing agent.
+- Decision history lives only in `00-META.md` `## Decisions`, one line per decision. Mark the calls you made without asking, in the document's language (for example `(agent call)`). The other files state decisions, not how they were reached or what was rejected.
+- `01-SPEC.md`: goal, requirements, success criteria, and out of scope. No function names, file names, or implementation choices.
+- `02-PLAN.md` (Track B/C): implementation direction, constraints, verification, one line per task, and `## Risk Review Targets` on Track C.
+- `03-TASK-*.md` (Track B/C): one commit-sized task each, with its target, change, and done criteria. No procedure and no assigned development method; the implementing agent chooses those.
+- `02-PLAN.md` and the `03-TASK-*.md` files do not repeat each other.
 - Preference data belongs in `~/.agents/preferences/preferences.md`, never in the spec directory. See `## Preference Capture`.
 - Keep verification logs out of files. Summarize verification in the PR body or final response.
 
