@@ -35,7 +35,7 @@ repository state and before writing any file.
    - Use `preferences.md` when it exists.
    - Otherwise create it from this skill's `references/preferences.template.md`.
 3. Read `~/.agents/preferences/preferences.md` when it exists and apply it while writing the spec and plan. It is the only preference file.
-4. Understand the task from the provided context. Use it as-is and do not ask for any particular input form. When the context references retrievable external resources, enrich your understanding with available Jira/GitHub MCP tools, or with `gh` for GitHub when MCP is unavailable.
+4. Understand the task from the provided context. Take it in whatever form the user gives it; do not require a particular input format. When the context references retrievable external resources, enrich your understanding with available Jira/GitHub MCP tools, or with `gh` for GitHub when MCP is unavailable.
 5. Collect project context:
    - Current branch and clean/dirty working tree.
    - Existing branch naming convention with `git branch --list`.
@@ -45,41 +45,52 @@ repository state and before writing any file.
    - Classify work type as `feature`, `fix`, `refactor`, or `docs`.
    - Derive task id from the issue key, GitHub issue number as `gh-N`, or a short slug when no id exists.
    - Follow existing branch prefix conventions when clear; otherwise use `feature/<task-id>-<slug>`, `fix/<task-id>-<slug>`, `refactor/<task-id>-<slug>`, or `docs/<task-id>-<slug>`.
-   - Record the base branch and this working branch name in `00-META.md`. The implement stage creates and checks out the branch.
+   - The implement stage creates and checks out the branch.
 8. Classify Track Type:
    - Track A: small, low-risk, few files, no API/DB/auth/security/shared-module impact, rollback is easy.
    - Track B: needs planning docs, may touch multiple files, fits existing architecture, requires tests or type checks.
    - Track C: Track B plus auth, security, payment, permission, shared-core, architecture, migration, or broad refactor risk.
 9. Confirm the track with the user when the classification is ambiguous or when Track C is selected. For obvious Track A/B, proceed and state the assumption.
-10. Create `docs/specs/{TASK-ID}/`.
-11. Track B/C: read this skill's `references/planning-research.md` and dispatch the research fan-out it describes, in a single batch, then write `01-SPEC.md` while it runs. Track A writes `01-SPEC.md` directly and skips the fan-out.
+10. Open the spec before asking anything:
+    - Resume a `drafting` spec when the user points at it or asks to continue, or when the task id above matches a `docs/specs/{TASK-ID}/` whose `00-META.md` is `drafting`. Pick the dialogue up from its `## Decisions` and `## Open Questions`. Ask only when it is unclear which spec is meant.
+    - Otherwise create `docs/specs/{TASK-ID}/` and write `00-META.md` from this skill's `references/spec-templates.md` with `Status: drafting`, the base branch, and the planned working branch.
+11. Hold the design dialogue (`## Design Dialogue`) and fill in `01-SPEC.md` as each part is confirmed. Track B/C first reads this skill's `references/planning-research.md` and dispatches the research fan-out it describes, in a single batch, so the dialogue runs while it does. Track A skips the fan-out.
 12. Track B/C: read the research reports before planning. Move the track from B to C when they surface risk the classification missed, tell the user when it moves, and confirm Track C with them before planning continues.
-13. Write the rest of the spec by track from this skill's `references/spec-templates.md`. Do not implement or open a PR during start.
-    - Track A: `00-META.md` and `01-SPEC.md` only (lightweight spec).
-    - Track B/C: `00-META.md` and `02-PLAN.md`, built from the research reports. The `03-TASK-*.md` files come after validation.
+13. Track B/C: write `02-PLAN.md` from the research reports and the dialogue, using this skill's `references/spec-templates.md`. The `03-TASK-*.md` files come after validation. Track A writes only `00-META.md` and `01-SPEC.md`. Do not implement or open a PR during start.
 14. For Track C, add `## Risk Review Targets` to `02-PLAN.md` and self-check whether each high-risk scope has review focus.
 15. Track B/C: read this skill's `references/plan-validation.md` and hand `02-PLAN.md` to a validation agent as it describes before going further. Apply what it finds, re-validate once, then write the `03-TASK-*.md` files from the settled plan. Track A skips this gate.
-16. Stop in feedback mode after writing the spec for every track (A/B/C):
+16. Request approval and stop, for every track. First remove `## Open Questions` from `00-META.md` and set `Status: planned`.
     - Give the user the spec directory path.
     - Summarize what was written: list every spec file created in this run, each rendered as a clickable Markdown link to the file (for example, `[00-META.md](/absolute/path/to/docs/specs/{TASK-ID}/00-META.md)`), with a short note of what each covers. List only files actually written for the track (Track A: `00-META.md`, `01-SPEC.md`; Track B/C: the full set including every `03-TASK-*.md` written). Never list a file that was not written.
     - Track B/C: add one line per validation finding — what was applied, and what was left unapplied and why.
     - Wait for approval before implementation.
 
+## Design Dialogue
+
+Ask before deciding. The user holds what the repository cannot show — know-how, the project's history, where it is heading — and a plan built on guesses about those comes back as rework.
+
+- Read before asking: the request, the instruction files, and the code and documents involved. Never ask what they already answer. On Track B/C, later questions build on the research reports.
+- Open by playing the request back in your own words with what you found that bears on it — a constraint, a conflict, a cheaper path — and end with one question.
+- Ask one question per message and say what its answer changes. Play goals, non-goals, and success criteria back part by part for confirmation.
+- When a point settles, name what is still open, or say nothing is. A reply about something that arrived mid-dialogue, such as a research report, ends by pointing back to the pending question.
+- A decision goes to the user when two or more options are viable, their tradeoffs pull against each other, and the pick depends on the user's know-how, history, or direction. Give that fork its own message: what each option means here, its tradeoffs, the combination when options can combine, and your recommendation with its reason.
+- Decide the rest yourself: what the repository, the documents, or `preferences.md` answers, or where one option is plainly better.
+- Record settled points in `00-META.md` under `## Decisions`, marking your own calls, and pending questions under `## Open Questions`. Move a question to Decisions once it is answered or deferred.
+- Ask in a plain message. A structured question feature is fine to use, but nothing here depends on one.
+- When an answer goes to the preference capture agent, pass along the question it answers. If a captured entry comes from a question still open, say so beside its report line.
+- The dialogue ends when no fork the user must decide is left. If the user asks to stop the questions, decide the rest and record each as your own call.
+- Track A: play your understanding back once, get it confirmed, and write `01-SPEC.md`.
+- If another skill offers its own design or brainstorming process alongside this stage, follow this section and keep the output in `docs/specs/{TASK-ID}/`.
+
 ## Follow-Up Requests
 
-This stage stays paused once the spec is written. An active workflow does not
-make every later message a stage transition. Route the next one:
+Once `Status` is `planned`, this stage stays paused. While it is still `drafting`, a reply is part of the design dialogue; handle it under `## Design Dialogue`. An active workflow does not make every later message a stage transition. Route the next one:
 
-- Spec change ("fix X in the spec", "add Y to the plan") — edit the named spec
-  file, restate what changed, and stay paused. Do not re-run this stage and do
-  not start implementing.
-- Approval to build ("looks good, start implementing") — hand off to
-  `butter-workflow-implement`.
-- Anything else — an ordinary request; carry it out directly. This stage runs
-  again only when the user names it again.
+- Spec change ("fix X in the spec", "add Y to the plan") — edit the named spec file, restate what changed, and stay paused. Do not re-run this stage and do not start implementing.
+- Approval to build ("looks good, start implementing") — hand off to `butter-workflow-implement`.
+- Anything else — an ordinary request; carry it out directly. This stage runs again only when the user names it again.
 
-Routing is independent of `## Preference Capture`. Whichever branch a message
-takes, it still goes to a capture agent.
+Routing is independent of `## Preference Capture`. Whichever branch a message takes, it still goes to a capture agent.
 
 ## Preference Capture
 
