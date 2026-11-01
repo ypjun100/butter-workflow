@@ -15,8 +15,8 @@ Implement the approved spec while preserving the docs as the handoff surface.
 2. Read `~/.agents/preferences/preferences.md` when it exists and follow it while implementing. It is the only preference file.
 3. Find the active task docs:
    - Prefer the task id or path supplied by the user.
-   - Otherwise inspect `docs/specs/*/00-META.md` and choose the one whose status is `planned` or whose working branch matches the current branch.
-   - Ask the user only when multiple plausible active specs exist.
+   - Otherwise inspect `docs/specs/*/00-META.md` and match the request to a spec, including `drafting`; use `planned` status or a matching working branch to narrow the candidates.
+   - Ask the user when the intended spec is unclear.
    - When the chosen `00-META.md` is `drafting`, stop: its design dialogue is unfinished. Tell the user to continue it by naming `butter-workflow-start`.
 4. Read the spec for the task's track:
    - Always: `00-META.md`, including `## Decisions`, and `01-SPEC.md`.

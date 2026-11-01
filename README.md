@@ -92,8 +92,8 @@ does.
 
 | Skill | Role |
 |---|---|
-| `butter-workflow-start` | Starts a workflow when explicitly named, from the context the user provides: classifies track type, plans the working branch name, researches the repository in parallel while holding a design dialogue that puts ambiguous decisions to the user, writes spec docs for every track, validates the plan with a separate agent, and lists the documents to review before pausing for approval. |
-| `butter-workflow-implement` | Creates or switches to the working branch, implements the approved spec with development methods picked per task, asks when a decision is ambiguous, verifies before claiming completion, commits, pushes, and creates a PR. |
+| `butter-workflow-start` | Opens or resumes a draft, clarifies the task, writes and validates the plan, then waits for approval. |
+| `butter-workflow-implement` | Blocks unfinished drafts, builds the approved plan, verifies changes, commits, pushes, and opens a PR. |
 | `butter-workflow-code-review` | Reviews a PR or branch diff with issue, plan, task, decision, and risk-target context, verifies review feedback against the code before applying it, then closes out the workflow. |
 
 All three stages also capture preferences while they run. See

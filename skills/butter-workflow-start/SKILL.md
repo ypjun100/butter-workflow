@@ -49,10 +49,10 @@ repository state and before writing any file.
    - Track A: small, low-risk, few files, no API/DB/auth/security/shared-module impact, rollback is easy.
    - Track B: needs planning docs, may touch multiple files, fits existing architecture, requires tests or type checks.
    - Track C: Track B plus auth, security, payment, permission, shared-core, architecture, migration, or broad refactor risk.
-9. Confirm the track with the user when the classification is ambiguous or when Track C is selected. For obvious Track A/B, proceed and state the assumption.
-10. Open the spec before asking anything:
-    - Resume a `drafting` spec when the user points at it or asks to continue, or when the task id above matches a `docs/specs/{TASK-ID}/` whose `00-META.md` is `drafting`. Pick the dialogue up from its `## Decisions` and `## Open Questions`. Ask only when it is unclear which spec is meant.
-    - Otherwise create `docs/specs/{TASK-ID}/` and write `00-META.md` from this skill's `references/spec-templates.md` with `Status: drafting`, the base branch, and the planned working branch.
+9. Open the spec before asking anything:
+   - Resume a `drafting` spec when the user points at it or asks to continue, or when the task id above matches a `docs/specs/{TASK-ID}/` whose `00-META.md` is `drafting`. Keep its recorded track and branch fields; pick the dialogue up from its `## Decisions` and `## Open Questions`. Ask only when it is unclear which spec is meant.
+   - Otherwise create `docs/specs/{TASK-ID}/` and write `00-META.md` from this skill's `references/spec-templates.md` with `Status: drafting`, the base branch, and the planned working branch.
+10. Confirm the track with the user when the classification is ambiguous or when Track C is selected, unless `## Decisions` already records that confirmation. For obvious Track A/B, proceed and state the assumption.
 11. Hold the design dialogue (`## Design Dialogue`) and fill in `01-SPEC.md` as each part is confirmed. Track B/C first reads this skill's `references/planning-research.md` and dispatches the research fan-out it describes, in a single batch, so the dialogue runs while it does. Track A skips the fan-out.
 12. Track B/C: read the research reports before planning. Move the track from B to C when they surface risk the classification missed, tell the user when it moves, and confirm Track C with them before planning continues.
 13. Track B/C: write `02-PLAN.md` from the research reports and the dialogue, using this skill's `references/spec-templates.md`. The `03-TASK-*.md` files come after validation. Track A writes only `00-META.md` and `01-SPEC.md`. Do not implement or open a PR during start.
